@@ -734,6 +734,7 @@ const ClarezaDigital = () => {
       <div style={{ padding: '0 20px 32px' }}>
         <button
           id="btn-dicas-seguranca"
+          onClick={() => irParaTela('dicas')}
           aria-label="Ver dicas rápidas de segurança"
           style={{
             width: '100%',
@@ -1617,6 +1618,132 @@ const ClarezaDigital = () => {
   )
 
   // ════════════════════════════════════
+  //  TELA 6 — DICAS RÁPIDAS DE SEGURANÇA
+  // ════════════════════════════════════
+  const renderDicas = () => (
+    <div className="animate-fadeIn" style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', minHeight: '100dvh' }}>
+      <Cabecalho />
+
+      <div className="flex justify-center mb-6">
+        <div
+          className="flex items-center justify-center rounded-full"
+          style={{ width: '72px', height: '72px', backgroundColor: '#e8f4e7' }}
+        >
+          <BookOpen size={40} className="text-[#00451f]" aria-hidden="true" />
+        </div>
+      </div>
+
+      <h2 className="font-bold text-center mb-2" style={{ fontSize: '24px', color: '#00451f', lineHeight: '1.3' }}>
+        Dicas Rápidas de Segurança
+      </h2>
+
+      <p className="text-center mb-8" style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6', padding: '0 12px' }}>
+        Pequenas atitudes que fazem toda a diferença para proteger você e sua família contra golpes.
+      </p>
+
+      {/* Lista de Dicas */}
+      <div className="flex flex-col gap-4 mb-8">
+        {[
+          {
+            titulo: 'Confirme a identidade da pessoa',
+            texto: 'Se receber mensagem de um parente ou amigo pedindo dinheiro ou PIX urgente com um número de telefone novo ou desconhecido, não pague. Ligue para o número antigo dele ou faça uma chamada de vídeo para ter certeza de quem é.',
+            bgColorIcone: '#eff6ff',
+            icone: <UserCheck size={24} style={{ color: '#4a90e2' }} />
+          },
+          {
+            titulo: 'Confira os dados antes de transferir',
+            texto: 'Na hora de fazer qualquer PIX, antes de colocar sua senha ou confirmar, olhe com atenção a tela do seu aplicativo do banco. Confira se o nome completo e o CPF/CNPJ de quem vai receber o dinheiro são exatamente os de quem você deseja pagar.',
+            bgColorIcone: '#e8f4e7',
+            icone: <ShieldCheck size={24} style={{ color: '#22c55e' }} />
+          },
+          {
+            titulo: 'Cuidado com promoções e links grátis',
+            texto: 'Desconfie de links recebidos que prometem prêmios, bônus na sua conta bancária, dinheiro fácil ou promoções boas demais para ser verdade. Empresas e bancos reais não enviam links desse tipo por mensagens estranhas.',
+            bgColorIcone: '#fff7ed',
+            icone: <LinkIcon size={24} style={{ color: '#f59d23' }} />
+          },
+          {
+            titulo: 'Bancos nunca pedem sua senha',
+            texto: 'Os bancos reais nunca telefonam, enviam e-mails ou mandam mensagens de texto pedindo suas senhas, códigos de confirmação, fotos do cartão ou pedindo para fazer qualquer tipo de transferência de teste.',
+            bgColorIcone: '#f5f3ff',
+            icone: <Lock size={24} style={{ color: '#7e5ce6' }} />
+          },
+          {
+            titulo: 'Desconfie da urgência e pressão',
+            texto: 'Golpistas tentam te assustar e fazer você agir rápido dizendo que sua conta será bloqueada ou que alguém precisa de socorro imediato. Respire, pare e converse com uma pessoa de sua inteira confiança antes de tomar qualquer decisão.',
+            bgColorIcone: '#fef2f2',
+            icone: <Clock size={24} style={{ color: '#ef4444' }} />
+          }
+        ].map((dica, idx) => (
+          <div
+            key={idx}
+            style={{
+              padding: '20px',
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+              border: '1px solid #f3f4f6',
+              display: 'flex',
+              gap: '16px',
+              alignItems: 'flex-start',
+            }}
+          >
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                backgroundColor: dica.bgColorIcone,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              {dica.icone}
+            </div>
+            <div style={{ flex: 1 }}>
+              <h3
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '700',
+                  color: '#111827',
+                  margin: '0 0 6px 0',
+                  lineHeight: '1.3'
+                }}
+              >
+                {dica.titulo}
+              </h3>
+              <p
+                style={{
+                  fontSize: '15px',
+                  color: '#4B5563',
+                  margin: 0,
+                  lineHeight: '1.6'
+                }}
+              >
+                {dica.texto}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={() => irParaTela('menu')}
+        aria-label="Voltar para a tela inicial"
+        className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all"
+        style={{ backgroundColor: '#00451f', fontSize: '18px', minHeight: '56px', marginBottom: '16px' }}
+      >
+        <CheckCircle size={22} aria-hidden="true" />
+        Entendi tudo, obrigado!
+      </button>
+
+      <Rodape />
+    </div>
+  )
+
+  // ════════════════════════════════════
   //  RENDER PRINCIPAL
   // ════════════════════════════════════
   return (
@@ -1638,6 +1765,7 @@ const ClarezaDigital = () => {
         {tela === 'mensagem' && renderMensagem()}
         {tela === 'link' && renderLink()}
         {tela === 'calma' && renderCalma()}
+        {tela === 'dicas' && renderDicas()}
       </div>
     </div>
   )

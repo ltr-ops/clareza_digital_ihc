@@ -224,18 +224,14 @@ textarea:focus, input:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* ===== SCROLLBAR SUTIL ===== */
+/* ===== HIDE SCROLLBARS ===== */
 ::-webkit-scrollbar {
-  width: 4px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 4px;
+html, body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 /* ===== UTILITÁRIOS RESPONSIVOS ===== */
