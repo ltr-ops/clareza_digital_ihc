@@ -405,10 +405,13 @@ const ClarezaDigital = () => {
             src="/assistente.png"
             alt="Assistente digital sorrindo e acenando"
             style={{
-              width: '160px',
-              height: '160px',
+              width: '240px',
+              height: '240px',
               objectFit: 'contain',
-              objectPosition: 'center bottom',
+              position: 'absolute',
+              bottom: '-5px',
+              left: '50%',
+              transform: 'translateX(-50%)',
             }}
           />
           {/* Estrelinhas decorativas */}
