@@ -409,7 +409,7 @@ const ClarezaDigital = () => {
               height: '240px',
               objectFit: 'contain',
               position: 'absolute',
-              bottom: '-5px',
+              bottom: '-29px', // Altere aqui: valores mais negativos jogam a imagem mais para baixo
               left: '50%',
               transform: 'translateX(-50%)',
             }}
