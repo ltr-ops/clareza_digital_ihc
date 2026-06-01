@@ -17,6 +17,10 @@ import {
   HelpCircle,
   Phone,
   X,
+  Info,
+  BookOpen,
+  MessageCircle,
+  DollarSign,
 } from 'lucide-react'
 
 /* ═══════════════════════════════════════════════
@@ -28,7 +32,7 @@ import {
 
 const ClarezaDigital = () => {
   // ── Estados principais ──
-  const [tela, setTela] = useState('splash')
+  const [tela, setTela] = useState('menu')
   const [pixPasso, setPixPasso] = useState(1)
   const [pixRespostas, setPixRespostas] = useState({})
   const [pixValor, setPixValor] = useState('')
@@ -311,174 +315,423 @@ const ClarezaDigital = () => {
   )
 
   // ════════════════════════════════════
-  //  TELA 0 — SPLASH / BOAS-VINDAS
+  //  TELA 0 — SPLASH (não utilizado — app inicia no menu)
   // ════════════════════════════════════
-  const renderSplash = () => (
-    <div
-      className="flex flex-col items-center justify-center px-6 sm:px-8 animate-fadeIn splash-screen"
-      style={{ backgroundColor: '#F0F4F8' }}
-    >
-      {/* Logo / Escudo */}
-      <div
-        className="flex items-center justify-center mb-8 rounded-full shadow-xl"
-        style={{
-          width: '120px',
-          height: '120px',
-          background: 'linear-gradient(135deg, #1A4A8A, #2563EB)',
-        }}
-      >
-        <Shield size={64} className="text-white" aria-hidden="true" />
-      </div>
-
-      <h1
-        className="font-bold text-center mb-3"
-        style={{ fontSize: '32px', color: '#1A4A8A', lineHeight: '1.2' }}
-      >
-        Clareza Digital
-      </h1>
-
-      <p
-        className="text-center font-semibold mb-2"
-        style={{ fontSize: '20px', color: '#2563EB', lineHeight: '1.6' }}
-      >
-        Tudo bem? Decidimos juntos.
-      </p>
-
-      <p
-        className="text-center mb-12"
-        style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6', maxWidth: '320px' }}
-      >
-        Sua segurança vale muito. Vamos agir com calma e clareza.
-      </p>
-
-      <button
-        onClick={() => irParaTela('menu')}
-        aria-label="Entrar no aplicativo Clareza Digital"
-        className="w-full font-bold text-white rounded-2xl shadow-lg hover:shadow-xl transition-all"
-        style={{
-          backgroundColor: '#1A4A8A',
-          fontSize: '20px',
-          minHeight: '60px',
-          maxWidth: '320px',
-        }}
-      >
-        Entrar
-      </button>
-
-      <p
-        className="text-center mt-8"
-        style={{ fontSize: '14px', color: '#9CA3AF', lineHeight: '1.5' }}
-      >
-        Projeto acadêmico IHC — IFPE Belo Jardim
-      </p>
-    </div>
-  )
+  const renderSplash = () => null
 
   // ════════════════════════════════════
-  //  TELA 1 — MENU PRINCIPAL
+  //  TELA 1 — MENU PRINCIPAL (fiel à imagem de referência)
   // ════════════════════════════════════
   const renderMenu = () => (
-    <div className="animate-fadeIn" style={{ backgroundColor: '#F0F4F8' }}>
-      {/* Topo */}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="font-bold" style={{ fontSize: '26px', color: '#1C1C1E' }}>
-          Olá! O que você precisa?
-        </h1>
-        <BotaoCalma />
+    <div
+      className="animate-fadeIn"
+      style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', minHeight: '100dvh' }}
+    >
+      {/* ── HEADER: escudo + nome + ícone info ── */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '20px 24px 12px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Ícone escudo verde */}
+          <div
+            style={{
+              width: '36px',
+              height: '36px',
+              backgroundColor: '#e8f4e7',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <ShieldCheck size={22} style={{ color: '#00451f' }} aria-hidden="true" />
+          </div>
+          {/* Texto Clareza Digital */}
+          <span
+            style={{
+              fontSize: '20px',
+              fontWeight: '700',
+              color: '#00451f',
+              letterSpacing: '-0.3px',
+            }}
+          >
+            Clareza Digital
+          </span>
+        </div>
+        {/* Ícone info */}
+        <button
+          aria-label="Informações sobre o aplicativo"
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: '4px',
+            cursor: 'pointer',
+            color: '#6b7280',
+          }}
+        >
+          <Info size={24} aria-hidden="true" />
+        </button>
       </div>
 
-      {/* Cards de funcionalidades */}
-      <div className="flex flex-col gap-4 mb-8">
-        {/* Card 1 — PIX */}
-        <button
-          onClick={() => irParaTela('pix')}
-          aria-label="Modo Seguro PIX — verificar se um PIX é seguro antes de pagar"
-          className="w-full flex items-center gap-4 p-5 rounded-2xl bg-white shadow-md hover:shadow-lg transition-all text-left"
-          style={{ border: '2px solid #BBF7D0', minHeight: '90px' }}
+      {/* ── ILUSTRAÇÃO: círculo verde claro + imagem da mulher ── */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '16px',
+          marginBottom: '8px',
+        }}
+      >
+        <div
+          style={{
+            width: '180px',
+            height: '180px',
+            borderRadius: '50%',
+            backgroundColor: '#e8f4e7',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+            position: 'relative',
+          }}
         >
-          <div
-            className="flex items-center justify-center rounded-xl shrink-0"
-            style={{ width: '56px', height: '56px', backgroundColor: '#ECFDF5' }}
-          >
-            <ShieldCheck size={32} className="text-[#1D6F42]" aria-hidden="true" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="font-bold" style={{ fontSize: '20px', color: '#1C1C1E', lineHeight: '1.3' }}>
-              Modo Seguro PIX
-            </h2>
-            <p style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.5', marginTop: '2px' }}>
-              Antes de pagar, vamos conferir juntos se é seguro.
-            </p>
-          </div>
-          <ChevronRight size={24} className="text-[#9CA3AF] shrink-0" aria-hidden="true" />
-        </button>
+          <img
+            src="/assistente.png"
+            alt="Assistente digital sorrindo e acenando"
+            style={{
+              width: '160px',
+              height: '160px',
+              objectFit: 'contain',
+              objectPosition: 'center bottom',
+            }}
+          />
+          {/* Estrelinhas decorativas */}
+          <span
+            style={{
+              position: 'absolute',
+              top: '18px',
+              left: '18px',
+              fontSize: '14px',
+              color: '#4ade80',
+              opacity: 0.7,
+            }}
+          >✦</span>
+          <span
+            style={{
+              position: 'absolute',
+              top: '22px',
+              right: '20px',
+              fontSize: '10px',
+              color: '#4ade80',
+              opacity: 0.6,
+            }}
+          >✦</span>
+        </div>
+      </div>
 
-        {/* Card 2 — Mensagem estranha */}
+      {/* ── TÍTULO E SUBTÍTULO ── */}
+      <div style={{ padding: '0 28px', textAlign: 'center', marginBottom: '28px' }}>
+        <h1
+          style={{
+            fontSize: '34px',
+            fontWeight: '800',
+            color: '#00451f',
+            lineHeight: '1.15',
+            margin: '0 0 12px',
+          }}
+        >
+          Vamos resolver{' '}<br />isso juntos.
+        </h1>
+        <p
+          style={{
+            fontSize: '17px',
+            color: '#1f2937',
+            lineHeight: '1.5',
+            margin: 0,
+          }}
+        >
+          Qual situação você está enfrentando?
+        </p>
+      </div>
+
+      {/* ── 4 CARDS DE OPÇÕES ── */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+          padding: '0 20px',
+          marginBottom: '20px',
+        }}
+      >
+        {/* Card 1 — Mensagem suspeita */}
         <button
           onClick={() => irParaTela('mensagem')}
-          aria-label="Analisar mensagem estranha recebida por WhatsApp ou mensagem de texto"
-          className="w-full flex items-center gap-4 p-5 rounded-2xl bg-white shadow-md hover:shadow-lg transition-all text-left"
-          style={{ border: '2px solid #FDE68A', minHeight: '90px' }}
+          aria-label="Analisar mensagem suspeita"
+          id="btn-mensagem-suspeita"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: '18px 20px',
+            backgroundColor: '#ffffff',
+            border: 'none',
+            borderRadius: '20px',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+            cursor: 'pointer',
+            textAlign: 'left',
+            minHeight: '76px',
+            transition: 'box-shadow 200ms ease, transform 150ms ease',
+          }}
+          onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.13)'}
+          onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)'}
         >
+          {/* Ícone azul - balão de conversa */}
           <div
-            className="flex items-center justify-center rounded-xl shrink-0"
-            style={{ width: '56px', height: '56px', backgroundColor: '#FFFBEB' }}
+            style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '14px',
+              backgroundColor: '#eff6ff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
           >
-            <MessageSquareWarning size={32} className="text-[#D97706]" aria-hidden="true" />
+            <MessageCircle size={26} style={{ color: '#4a90e2' }} fill="#4a90e2" aria-hidden="true" />
           </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="font-bold" style={{ fontSize: '20px', color: '#1C1C1E', lineHeight: '1.3' }}>
-              Recebi uma mensagem estranha
-            </h2>
-            <p style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.5', marginTop: '2px' }}>
-              Analise mensagens do WhatsApp ou de texto antes de responder.
-            </p>
-          </div>
-          <ChevronRight size={24} className="text-[#9CA3AF] shrink-0" aria-hidden="true" />
+          <span
+            style={{
+              flex: 1,
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#111827',
+              lineHeight: '1.3',
+            }}
+          >
+            Mensagem suspeita
+          </span>
+          <ChevronRight size={22} style={{ color: '#9ca3af', flexShrink: 0 }} aria-hidden="true" />
         </button>
 
-        {/* Card 3 — Link suspeito */}
+        {/* Card 2 — Pedido de PIX */}
+        <button
+          onClick={() => irParaTela('pix')}
+          aria-label="Verificar pedido de PIX"
+          id="btn-pedido-pix"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: '18px 20px',
+            backgroundColor: '#ffffff',
+            border: 'none',
+            borderRadius: '20px',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+            cursor: 'pointer',
+            textAlign: 'left',
+            minHeight: '76px',
+            transition: 'box-shadow 200ms ease, transform 150ms ease',
+          }}
+          onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.13)'}
+          onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)'}
+        >
+          {/* Ícone verde - cifrão */}
+          <div
+            style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '50%',
+              backgroundColor: '#22c55e',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <DollarSign size={26} style={{ color: '#ffffff' }} aria-hidden="true" />
+          </div>
+          <span
+            style={{
+              flex: 1,
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#111827',
+              lineHeight: '1.3',
+            }}
+          >
+            Pedido de PIX
+          </span>
+          <ChevronRight size={22} style={{ color: '#9ca3af', flexShrink: 0 }} aria-hidden="true" />
+        </button>
+
+        {/* Card 3 — Link desconhecido */}
         <button
           onClick={() => irParaTela('link')}
-          aria-label="Verificar se um link recebido é confiável"
-          className="w-full flex items-center gap-4 p-5 rounded-2xl bg-white shadow-md hover:shadow-lg transition-all text-left"
-          style={{ border: '2px solid #FDE68A', minHeight: '90px' }}
+          aria-label="Verificar link desconhecido"
+          id="btn-link-desconhecido"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: '18px 20px',
+            backgroundColor: '#ffffff',
+            border: 'none',
+            borderRadius: '20px',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+            cursor: 'pointer',
+            textAlign: 'left',
+            minHeight: '76px',
+            transition: 'box-shadow 200ms ease, transform 150ms ease',
+          }}
+          onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.13)'}
+          onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)'}
         >
+          {/* Ícone laranja - corrente/link */}
           <div
-            className="flex items-center justify-center rounded-xl shrink-0"
-            style={{ width: '56px', height: '56px', backgroundColor: '#FFFBEB' }}
+            style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '14px',
+              backgroundColor: '#fff7ed',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
           >
-            <div className="relative">
-              <LinkIcon size={28} className="text-[#D97706]" aria-hidden="true" />
-              <AlertTriangle size={14} className="text-[#EA580C] absolute -top-1 -right-2" aria-hidden="true" />
-            </div>
+            <LinkIcon size={26} style={{ color: '#f59d23' }} aria-hidden="true" />
           </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="font-bold" style={{ fontSize: '20px', color: '#1C1C1E', lineHeight: '1.3' }}>
-              Tenho dúvida sobre um link
-            </h2>
-            <p style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.5', marginTop: '2px' }}>
-              Cuidado ao clicar! Vamos ver se o endereço é confiável.
-            </p>
+          <span
+            style={{
+              flex: 1,
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#111827',
+              lineHeight: '1.3',
+            }}
+          >
+            Link desconhecido
+          </span>
+          <ChevronRight size={22} style={{ color: '#9ca3af', flexShrink: 0 }} aria-hidden="true" />
+        </button>
+
+        {/* Card 4 — Preciso de ajuda para decidir */}
+        <button
+          onClick={() => irParaTela('calma')}
+          aria-label="Preciso de ajuda para decidir"
+          id="btn-ajuda-decidir"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: '18px 20px',
+            backgroundColor: '#ffffff',
+            border: 'none',
+            borderRadius: '20px',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+            cursor: 'pointer',
+            textAlign: 'left',
+            minHeight: '76px',
+            transition: 'box-shadow 200ms ease, transform 150ms ease',
+          }}
+          onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.13)'}
+          onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)'}
+        >
+          {/* Ícone roxo - coração */}
+          <div
+            style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '14px',
+              backgroundColor: '#f5f3ff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Heart size={26} style={{ color: '#7e5ce6' }} fill="#7e5ce6" aria-hidden="true" />
           </div>
-          <ChevronRight size={24} className="text-[#9CA3AF] shrink-0" aria-hidden="true" />
+          <span
+            style={{
+              flex: 1,
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#111827',
+              lineHeight: '1.3',
+            }}
+          >
+            Preciso de ajuda{' '}<br />para decidir
+          </span>
+          <ChevronRight size={22} style={{ color: '#9ca3af', flexShrink: 0 }} aria-hidden="true" />
         </button>
       </div>
 
-      {/* Regra de Ouro */}
-      <div
-        className="rounded-2xl p-5 text-center shadow-sm"
-        style={{ backgroundColor: '#FFFBEB', border: '2px solid #FDE68A' }}
-      >
-        <p className="font-bold mb-1" style={{ fontSize: '16px', color: '#92400E' }}>
-          ✨ Regra de Ouro
-        </p>
-        <p className="font-semibold" style={{ fontSize: '17px', color: '#D97706', lineHeight: '1.6' }}>
-          Na dúvida, espere. O tempo é o pior inimigo do golpista.
-        </p>
+      {/* ── CARD VERDE: Dicas rápidas de segurança ── */}
+      <div style={{ padding: '0 20px 32px' }}>
+        <button
+          id="btn-dicas-seguranca"
+          aria-label="Ver dicas rápidas de segurança"
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '14px',
+            padding: '20px 20px',
+            backgroundColor: '#e8f4e7',
+            border: 'none',
+            borderRadius: '20px',
+            boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
+            cursor: 'pointer',
+            textAlign: 'left',
+            transition: 'box-shadow 200ms ease',
+          }}
+          onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,69,31,0.15)'}
+          onMouseLeave={e => e.currentTarget.style.boxShadow = '0 1px 6px rgba(0,0,0,0.06)'}
+        >
+          <div
+            style={{
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <BookOpen size={30} style={{ color: '#00451f' }} aria-hidden="true" />
+          </div>
+          <div style={{ flex: 1 }}>
+            <p
+              style={{
+                fontSize: '17px',
+                fontWeight: '700',
+                color: '#00451f',
+                margin: '0 0 3px',
+                lineHeight: '1.3',
+              }}
+            >
+              Dicas rápidas de segurança
+            </p>
+            <p
+              style={{
+                fontSize: '14px',
+                color: '#1a6035',
+                margin: 0,
+                lineHeight: '1.4',
+              }}
+            >
+              Aprenda a se proteger no dia a dia.
+            </p>
+          </div>
+          <ChevronRight size={22} style={{ color: '#00451f', flexShrink: 0 }} aria-hidden="true" />
+        </button>
       </div>
-
-      <Rodape />
     </div>
   )
 
