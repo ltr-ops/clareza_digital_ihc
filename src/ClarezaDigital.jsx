@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   ShieldCheck,
-  MessageSquareWarning,
   Link as LinkIcon,
   Heart,
   ChevronRight,
@@ -12,12 +11,10 @@ import {
   CheckCircle,
   XCircle,
   Loader2,
-  Shield,
   MessageSquare,
   HelpCircle,
   Phone,
   X,
-  Info,
   BookOpen,
   MessageCircle,
   DollarSign,
@@ -326,7 +323,7 @@ const ClarezaDigital = () => {
   const renderMenu = () => (
     <div
       className="animate-fadeIn"
-      style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', minHeight: '100dvh' }}
+      style={{ backgroundColor: '#FFFFFF', minHeight: '100dvh' }}
     >
       {/* ── HEADER: escudo + nome + ícone info ── */}
       <div
@@ -364,19 +361,6 @@ const ClarezaDigital = () => {
             Clareza Digital
           </span>
         </div>
-        {/* Ícone info */}
-        <button
-          aria-label="Informações sobre o aplicativo"
-          style={{
-            background: 'none',
-            border: 'none',
-            padding: '4px',
-            cursor: 'pointer',
-            color: '#6b7280',
-          }}
-        >
-          <Info size={24} aria-hidden="true" />
-        </button>
       </div>
 
       {/* ── ILUSTRAÇÃO: círculo verde claro + imagem da mulher ── */}
@@ -1624,7 +1608,7 @@ const ClarezaDigital = () => {
   //  TELA 6 — DICAS RÁPIDAS DE SEGURANÇA
   // ════════════════════════════════════
   const renderDicas = () => (
-    <div className="animate-fadeIn" style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', minHeight: '100dvh' }}>
+    <div className="animate-fadeIn" style={{ backgroundColor: '#FFFFFF', minHeight: '100dvh' }}>
       <Cabecalho />
 
       <div className="flex justify-center mb-6">
