@@ -21,6 +21,7 @@ import {
   BookOpen,
   MessageCircle,
   DollarSign,
+  Lock,
 } from 'lucide-react'
 
 /* ═══════════════════════════════════════════════
@@ -672,6 +673,61 @@ const ClarezaDigital = () => {
           </span>
           <ChevronRight size={22} style={{ color: '#9ca3af', flexShrink: 0 }} aria-hidden="true" />
         </button>
+
+        {/* Card 5 — Em constante evolução */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: '18px 20px',
+            backgroundColor: '#f9fafb',
+            border: '2px dashed #e5e7eb',
+            borderRadius: '20px',
+            textAlign: 'left',
+            minHeight: '76px',
+          }}
+        >
+          {/* Ícone cinza - cadeado de bloqueio */}
+          <div
+            style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '14px',
+              backgroundColor: '#f3f4f6',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Lock size={24} style={{ color: '#9ca3af' }} aria-hidden="true" />
+          </div>
+          <div style={{ flex: 1 }}>
+            <span
+              style={{
+                display: 'block',
+                fontSize: '18px',
+                fontWeight: '600',
+                color: '#6b7280',
+                lineHeight: '1.3',
+              }}
+            >
+              Em constante evolução
+            </span>
+            <span
+              style={{
+                display: 'block',
+                fontSize: '14px',
+                color: '#9ca3af',
+                marginTop: '2px',
+                fontWeight: '500',
+              }}
+            >
+              Funcionalidades novas virão em breve
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* ── CARD VERDE: Dicas rápidas de segurança ── */}
