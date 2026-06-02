@@ -18,6 +18,8 @@ import {
   BookOpen,
   MessageCircle,
   DollarSign,
+  Lock,
+  LifeBuoy,
 } from 'lucide-react'
 
 /* ═══════════════════════════════════════════════
@@ -247,12 +249,12 @@ const ClarezaDigital = () => {
   const BotaoCalma = () => (
     <button
       onClick={abrirCalma}
-      aria-label="Modo calma — respire e relaxe"
+      aria-label="Pedir ajuda e orientações de segurança"
       className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-white font-bold shadow-lg hover:shadow-xl transition-all"
       style={{ backgroundColor: '#D97706', fontSize: '16px', minHeight: '44px' }}
     >
-      <Heart size={20} aria-hidden="true" fill="white" />
-      <span>CALMA</span>
+      <LifeBuoy size={20} aria-hidden="true" fill="white" />
+      <span>AJUDA</span>
     </button>
   )
 
@@ -514,10 +516,10 @@ const ClarezaDigital = () => {
           </span>
         </button>
 
-        {/* Card 4 — Estou nervoso ou com dúvida */}
+        {/* Card 4 — Não sei o que fazer */}
         <button
           onClick={() => irParaTela('calma')}
-          aria-label="Estou nervoso ou com dúvida"
+          aria-label="Não sei o que fazer, preciso de ajuda"
           id="btn-ajuda-decidir"
           style={{
             display: 'flex',
@@ -549,7 +551,7 @@ const ClarezaDigital = () => {
               justifyContent: 'center',
             }}
           >
-            <Heart size={28} style={{ color: '#7e5ce6' }} fill="#7e5ce6" aria-hidden="true" />
+            <LifeBuoy size={28} style={{ color: '#7e5ce6' }} fill="#7e5ce6" aria-hidden="true" />
           </div>
           <span
             style={{
@@ -559,7 +561,7 @@ const ClarezaDigital = () => {
               lineHeight: '1.25',
             }}
           >
-            Estou nervoso{'\n'}ou com dúvida
+            Não sei{'\n'}o que fazer
           </span>
         </button>
       </div>
@@ -1381,7 +1383,7 @@ const ClarezaDigital = () => {
       </div>
 
       <h1 className="font-bold text-center mb-2" style={{ fontSize: '26px', color: '#1A4A8A', lineHeight: '1.3' }}>
-        Respire. Você está segura.
+        Calma. Você está em segurança.
       </h1>
 
       <p className="text-center mb-10" style={{ fontSize: '18px', color: '#4B5563', lineHeight: '1.6' }}>
@@ -1432,12 +1434,12 @@ const ClarezaDigital = () => {
       <div className="flex flex-col gap-3">
         <button
           onClick={voltarDeCalma}
-          aria-label="Estou mais calma, voltar para onde eu estava"
+          aria-label="Já me sinto melhor, voltar para onde eu estava"
           className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all"
           style={{ backgroundColor: '#1A4A8A', fontSize: '18px', minHeight: '56px' }}
         >
-          <Heart size={22} aria-hidden="true" fill="white" />
-          Estou mais calma. Voltar.
+          <CheckCircle size={22} aria-hidden="true" fill="white" />
+          Já me sinto melhor. Voltar.
         </button>
         <button
           onClick={() => {}}
