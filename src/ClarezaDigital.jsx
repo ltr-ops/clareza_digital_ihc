@@ -329,60 +329,27 @@ const ClarezaDigital = () => {
         flexDirection: 'column',
       }}
     >
-      {/* ── HEADER: escudo + nome ── */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          padding: '16px 20px 8px',
-        }}
-      >
-        <div
-          style={{
-            width: '36px',
-            height: '36px',
-            backgroundColor: '#e8f4e7',
-            borderRadius: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}
-        >
-          <ShieldCheck size={22} style={{ color: '#00451f' }} aria-hidden="true" />
-        </div>
-        <span
-          style={{
-            fontSize: '18px',
-            fontWeight: '700',
-            color: '#00451f',
-            letterSpacing: '-0.3px',
-          }}
-        >
-          Clareza Digital
-        </span>
-      </div>
-
-      {/* ── SAUDAÇÃO E ORIENTAÇÃO ── */}
-      <div style={{ padding: '12px 20px 0' }}>
+      {/* ── 1. SITUAÇÃO DO USUÁRIO (Prioridade Máxima) ── */}
+      <div style={{ padding: '36px 20px 12px' }}>
         <h1
           style={{
-            fontSize: '26px',
+            fontSize: '32px',
             fontWeight: '800',
             color: '#00451f',
-            lineHeight: '1.2',
-            margin: '0 0 6px',
+            lineHeight: '1.15',
+            margin: '0 0 8px',
+            letterSpacing: '-0.5px',
           }}
         >
           O que aconteceu?
         </h1>
         <p
           style={{
-            fontSize: '16px',
+            fontSize: '18px',
             color: '#4B5563',
             lineHeight: '1.4',
             margin: 0,
+            fontWeight: '500',
           }}
         >
           Escolha a situação e eu te ajudo.
@@ -597,8 +564,8 @@ const ClarezaDigital = () => {
         </button>
       </div>
 
-      {/* ── BARRA INFERIOR: Dicas rápidas ── */}
-      <div style={{ padding: '0 20px 20px', marginTop: 'auto' }}>
+      {/* ── 3. RECURSOS SECUNDÁRIOS: Dicas rápidas ── */}
+      <div style={{ padding: '0 20px', marginTop: 'auto' }}>
         <button
           id="btn-dicas-seguranca"
           onClick={() => irParaTela('dicas')}
@@ -633,6 +600,31 @@ const ClarezaDigital = () => {
           </span>
           <ChevronRight size={20} style={{ color: '#00451f', flexShrink: 0 }} aria-hidden="true" />
         </button>
+      </div>
+
+      {/* ── 4. MARCA DO APLICATIVO (Baixa prioridade, rodapé) ── */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '6px',
+          padding: '20px 20px 24px',
+          opacity: 0.6,
+        }}
+      >
+        <ShieldCheck size={16} style={{ color: '#9CA3AF' }} aria-hidden="true" />
+        <span
+          style={{
+            fontSize: '13px',
+            fontWeight: '600',
+            color: '#9CA3AF',
+            letterSpacing: '0.5px',
+            textTransform: 'uppercase',
+          }}
+        >
+          Clareza Digital
+        </span>
       </div>
     </div>
   )
