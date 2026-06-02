@@ -276,7 +276,7 @@ const ClarezaDigital = () => {
   const Rodape = () => (
     <footer className="text-center py-6 mt-8" style={{ color: '#9CA3AF' }}>
       <p className="font-medium" style={{ fontSize: '13px', letterSpacing: '0.05em' }}>
-        CLAREZA DIGITAL — FOCO EM SEGURANÇA +45
+        CLAREZA DIGITAL — SEU ASSISTENTE DE SEGURANÇA
       </p>
     </footer>
   )
@@ -797,7 +797,7 @@ const ClarezaDigital = () => {
           </div>
 
           <h2 className="font-bold text-center mb-4" style={{ fontSize: '22px', color: '#1C1C1E', lineHeight: '1.4' }}>
-            O valor do PIX é quanto?
+            Qual o valor do PIX que estão pedindo?
           </h2>
 
           <p className="text-center mb-6" style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6' }}>
@@ -885,11 +885,11 @@ const ClarezaDigital = () => {
               </button>
               <button
                 onClick={() => irParaTela('menu')}
-                aria-label="Cancelar o PIX e voltar ao início"
+                aria-label="Sair e não fazer o PIX"
                 className="w-full p-3 rounded-2xl font-semibold transition-all"
                 style={{ backgroundColor: '#E5E7EB', color: '#374151', fontSize: '16px', minHeight: '48px' }}
               >
-                Cancelar o PIX
+                Sair e não fazer o PIX
               </button>
             </div>
 
@@ -1152,11 +1152,11 @@ const ClarezaDigital = () => {
         </div>
 
         <h2 className="font-bold text-center mb-2" style={{ fontSize: '22px', color: '#1C1C1E', lineHeight: '1.4' }}>
-          Cole aqui a mensagem que você recebeu
+          Escreva ou cole aqui a mensagem que você recebeu
         </h2>
 
         <p className="text-center mb-6" style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6' }}>
-          Pode ser do WhatsApp, mensagem de texto ou qualquer aplicativo.
+          Para colar, aperte e segure o dedo no quadro branco abaixo.
         </p>
 
         <div className="mb-6">
@@ -1166,7 +1166,7 @@ const ClarezaDigital = () => {
           <textarea
             id="mensagem-texto"
             rows={6}
-            placeholder="Cole ou escreva a mensagem aqui..."
+            placeholder="Escreva ou cole aqui..."
             value={mensagem}
             onChange={(e) => setMensagem(e.target.value)}
             className="w-full p-4 rounded-2xl bg-white border-2 border-gray-200 resize-none"
@@ -1182,7 +1182,7 @@ const ClarezaDigital = () => {
           className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ backgroundColor: '#2563EB', fontSize: '18px', minHeight: '56px' }}
         >
-          Analisar mensagem
+          Verificar mensagem
           <ChevronRight size={22} aria-hidden="true" />
         </button>
 
@@ -1324,11 +1324,11 @@ const ClarezaDigital = () => {
         </div>
 
         <h2 className="font-bold text-center mb-2" style={{ fontSize: '22px', color: '#1C1C1E', lineHeight: '1.4' }}>
-          Cole o endereço que você recebeu
+          Escreva ou cole aqui o link (endereço azul)
         </h2>
 
         <p className="text-center mb-6" style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6' }}>
-          É o endereço que veio na mensagem ou no e-mail.
+          É o texto que mandaram para você clicar. Para colar, aperte e segure no quadro abaixo.
         </p>
 
         <div className="mb-6">
@@ -1354,7 +1354,7 @@ const ClarezaDigital = () => {
           className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ backgroundColor: '#2563EB', fontSize: '18px', minHeight: '56px' }}
         >
-          Verificar endereço
+          Checar se é seguro
           <ChevronRight size={22} aria-hidden="true" />
         </button>
 
@@ -1573,7 +1573,7 @@ const ClarezaDigital = () => {
         style={{ backgroundColor: '#00451f', fontSize: '18px', minHeight: '56px', marginBottom: '16px' }}
       >
         <CheckCircle size={22} aria-hidden="true" />
-        Entendi tudo, obrigado!
+        Entendi
       </button>
 
       <Rodape />
