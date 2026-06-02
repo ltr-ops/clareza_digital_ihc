@@ -1441,15 +1441,24 @@ const ClarezaDigital = () => {
           <CheckCircle size={22} aria-hidden="true" fill="white" />
           Já me sinto melhor. Voltar.
         </button>
-        <button
-          onClick={() => {}}
-          aria-label="Simular ligação para um familiar de confiança"
+        <a
+          href="tel:00000000000"
+          aria-label="Ligar para um familiar de confiança"
           className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl font-semibold transition-all"
-          style={{ backgroundColor: '#E5E7EB', color: '#374151', fontSize: '16px', minHeight: '48px' }}
+          style={{
+            backgroundColor: '#E5E7EB',
+            color: '#374151',
+            fontSize: '16px',
+            minHeight: '48px',
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
         >
           <Phone size={20} aria-hidden="true" />
           Ligar para familiar
-        </button>
+        </a>
       </div>
 
       <Rodape />
