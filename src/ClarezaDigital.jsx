@@ -366,7 +366,6 @@ const ClarezaDigital = () => {
           gridTemplateColumns: '1fr 1fr',
           gap: '12px',
           padding: '20px 20px 12px',
-          flex: 1,
           alignContent: 'start',
         }}
       >
@@ -614,6 +613,7 @@ const ClarezaDigital = () => {
           gap: '6px',
           padding: '20px 20px 24px',
           opacity: 0.6,
+          marginTop: 'auto',
         }}
       >
         <ShieldCheck size={16} style={{ color: '#9CA3AF' }} aria-hidden="true" />
