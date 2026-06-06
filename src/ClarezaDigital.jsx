@@ -20,6 +20,7 @@ import {
   DollarSign,
   Lock,
   LifeBuoy,
+  Compass,
 } from 'lucide-react'
 
 /* ═══════════════════════════════════════════════
@@ -551,7 +552,7 @@ const ClarezaDigital = () => {
               justifyContent: 'center',
             }}
           >
-            <HelpCircle size={28} style={{ color: '#7e5ce6' }} aria-hidden="true" />
+            <Compass size={28} style={{ color: '#7e5ce6' }} aria-hidden="true" />
           </div>
           <span
             style={{
