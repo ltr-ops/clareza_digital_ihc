@@ -551,7 +551,7 @@ const ClarezaDigital = () => {
               justifyContent: 'center',
             }}
           >
-            <LifeBuoy size={28} style={{ color: '#7e5ce6' }} fill="#7e5ce6" aria-hidden="true" />
+            <HelpCircle size={28} style={{ color: '#7e5ce6' }} aria-hidden="true" />
           </div>
           <span
             style={{
