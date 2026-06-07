@@ -45,6 +45,7 @@ const ClarezaDigital = () => {
   const [mostrarEmpatia, setMostrarEmpatia] = useState(false)
   const [textoEmpatia, setTextoEmpatia] = useState('')
   const [animKey, setAnimKey] = useState(0)
+  const [tutorialCopiarPasso, setTutorialCopiarPasso] = useState(0)
 
   // ── Animação de respiração no Modo Calma ──
   useEffect(() => {
@@ -69,6 +70,7 @@ const ClarezaDigital = () => {
     if (nomeTela === 'mensagem') {
       setMensagem('')
       setResultado(null)
+      setTutorialCopiarPasso(0)
     }
     if (nomeTela === 'link') {
       setLink('')
@@ -1140,56 +1142,172 @@ const ClarezaDigital = () => {
       )
     }
 
-    // Formulário
-    return (
-      <div className="animate-fadeIn" style={{ backgroundColor: '#F0F4F8' }}>
-        <Cabecalho />
+    // Tutorial de copiar e colar
+    if (tutorialCopiarPasso > 0) {
+      return (
+        <div className="animate-fadeIn flex flex-col" style={{ backgroundColor: '#F0F4F8', minHeight: '100dvh' }}>
+          <Cabecalho onVoltar={() => setTutorialCopiarPasso(0)} />
 
-        <div className="flex justify-center mb-6">
-          <div
-            className="flex items-center justify-center rounded-full"
-            style={{ width: '72px', height: '72px', backgroundColor: '#EFF6FF' }}
-          >
-            <MessageSquare size={40} className="text-[#2563EB]" aria-hidden="true" />
+          <div className="flex flex-col items-center justify-center text-center mt-4 flex-grow">
+            {tutorialCopiarPasso === 1 && (
+              <div className="animate-fadeIn w-full">
+                <h2 className="font-bold mb-4" style={{ fontSize: '24px', color: '#1C1C1E', lineHeight: '1.4' }}>
+                  Vamos fazer juntos
+                </h2>
+                <p style={{ fontSize: '18px', color: '#374151', lineHeight: '1.6' }}>
+                  Vou mostrar como copiar uma mensagem para analisarmos com segurança.
+                </p>
+              </div>
+            )}
+
+            {tutorialCopiarPasso === 2 && (
+              <div className="animate-fadeIn w-full flex flex-col items-center">
+                <div className="mb-6 flex items-center justify-center bg-blue-100 rounded-full" style={{ width: '100px', height: '100px' }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                  </svg>
+                </div>
+                <p className="font-medium" style={{ fontSize: '18px', color: '#1C1C1E', lineHeight: '1.6' }}>
+                  Abra o aplicativo onde você recebeu a mensagem.
+                </p>
+              </div>
+            )}
+
+            {tutorialCopiarPasso === 3 && (
+              <div className="animate-fadeIn w-full flex flex-col items-center">
+                <div className="mb-6 flex items-center justify-center bg-amber-100 rounded-full" style={{ width: '100px', height: '100px' }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M22 14a8 8 0 0 1-8 8"></path>
+                    <path d="M18 11v-1a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                    <path d="M14 10V9a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v1"></path>
+                    <path d="M10 9.5V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v10"></path>
+                    <path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                  </svg>
+                </div>
+                <p className="font-medium" style={{ fontSize: '18px', color: '#1C1C1E', lineHeight: '1.6' }}>
+                  Toque e segure a mensagem até aparecer um menu.
+                </p>
+              </div>
+            )}
+
+            {tutorialCopiarPasso === 4 && (
+              <div className="animate-fadeIn w-full flex flex-col items-center">
+                <div className="mb-6 flex items-center justify-center bg-purple-100 rounded-full" style={{ width: '100px', height: '100px' }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#7e5ce6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </div>
+                <p className="font-medium" style={{ fontSize: '18px', color: '#1C1C1E', lineHeight: '1.6' }}>
+                  Toque na opção <strong>'Copiar'</strong>.
+                </p>
+              </div>
+            )}
+
+            {tutorialCopiarPasso === 5 && (
+              <div className="animate-fadeIn w-full flex flex-col items-center">
+                <div className="mb-6 flex items-center justify-center bg-green-100 rounded-full" style={{ width: '100px', height: '100px' }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    <path d="M12 11v6"></path>
+                    <path d="M9 14l3 3 3-3"></path>
+                  </svg>
+                </div>
+                <p className="font-medium" style={{ fontSize: '18px', color: '#1C1C1E', lineHeight: '1.6' }}>
+                  Volte para o Clareza Digital, toque dentro da caixa de mensagem e escolha <strong>'Colar'</strong>.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-8 mb-6 flex flex-col items-center w-full">
+            <button
+              onClick={() => {
+                if (tutorialCopiarPasso < 5) {
+                  setTutorialCopiarPasso(prev => prev + 1)
+                } else {
+                  setTutorialCopiarPasso(0)
+                }
+              }}
+              aria-label={tutorialCopiarPasso < 5 ? "Continuar para o próximo passo" : "Entendi, voltar para colar a mensagem"}
+              className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all shadow-md"
+              style={{ backgroundColor: '#2563EB', fontSize: '18px', minHeight: '56px' }}
+            >
+              {tutorialCopiarPasso < 5 ? 'Continuar' : 'Entendi'}
+              {tutorialCopiarPasso < 5 && <ChevronRight size={22} aria-hidden="true" />}
+            </button>
+            
+            <p className="mt-4 font-medium" style={{ fontSize: '14px', color: '#6B7280' }}>
+              Passo {tutorialCopiarPasso} de 5
+            </p>
           </div>
         </div>
+      )
+    }
 
-        <h2 className="font-bold text-center mb-2" style={{ fontSize: '22px', color: '#1C1C1E', lineHeight: '1.4' }}>
-          Escreva ou cole aqui a mensagem que você recebeu
-        </h2>
+    // Formulário
+    return (
+      <div className="animate-fadeIn flex flex-col" style={{ backgroundColor: '#F0F4F8', minHeight: '100dvh' }}>
+        <Cabecalho />
 
-        <p className="text-center mb-6" style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6' }}>
-          Para colar, aperte e segure o dedo no quadro branco abaixo.
-        </p>
+        <div className="flex flex-col flex-grow">
+          <div className="flex justify-center mb-6">
+            <div
+              className="flex items-center justify-center rounded-full"
+              style={{ width: '72px', height: '72px', backgroundColor: '#EFF6FF' }}
+            >
+              <MessageSquare size={40} className="text-[#2563EB]" aria-hidden="true" />
+            </div>
+          </div>
 
-        <div className="mb-6">
-          <label htmlFor="mensagem-texto" className="block font-medium mb-2" style={{ fontSize: '16px', color: '#374151' }}>
-            Mensagem recebida
-          </label>
-          <textarea
-            id="mensagem-texto"
-            rows={6}
-            placeholder="Escreva ou cole aqui..."
-            value={mensagem}
-            onChange={(e) => setMensagem(e.target.value)}
-            className="w-full p-4 rounded-2xl bg-white border-2 border-gray-200 resize-none"
-            style={{ fontSize: '16px', lineHeight: '1.6', color: '#1C1C1E' }}
-            aria-label="Cole ou escreva aqui a mensagem que você recebeu para ser analisada"
-          />
+          <h2 className="font-bold text-center mb-2" style={{ fontSize: '22px', color: '#1C1C1E', lineHeight: '1.4' }}>
+            Escreva ou cole aqui a mensagem que você recebeu
+          </h2>
+
+          <p className="text-center mb-6" style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6' }}>
+            Você pode escrever a mensagem ou colar o texto recebido.
+          </p>
+
+          <div className="mb-4">
+            <textarea
+              id="mensagem-texto"
+              rows={6}
+              placeholder="Escreva ou cole aqui..."
+              value={mensagem}
+              onChange={(e) => setMensagem(e.target.value)}
+              className="w-full p-4 rounded-2xl bg-white border-2 border-gray-200 resize-none"
+              style={{ fontSize: '16px', lineHeight: '1.6', color: '#1C1C1E' }}
+              aria-label="Cole ou escreva aqui a mensagem que você recebeu para ser analisada"
+            />
+          </div>
+
+          <div className="flex justify-center mb-6">
+            <button
+              onClick={() => setTutorialCopiarPasso(1)}
+              aria-label="Abrir tutorial que ensina como copiar e colar uma mensagem"
+              className="flex items-center gap-2 bg-transparent border-none cursor-pointer p-2 rounded-xl transition-colors hover:bg-blue-50"
+              style={{ color: '#2563EB', fontSize: '15px', fontWeight: '500' }}
+            >
+              <HelpCircle size={18} aria-hidden="true" />
+              <span style={{ textDecoration: 'underline' }}>
+                Não sabe como copiar e colar uma mensagem?
+              </span>
+            </button>
+          </div>
+
+          <button
+            onClick={analisarMensagem}
+            disabled={!mensagem.trim()}
+            aria-label="Analisar a mensagem que você escreveu"
+            className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-auto mb-6"
+            style={{ backgroundColor: '#2563EB', fontSize: '18px', minHeight: '56px' }}
+          >
+            Verificar mensagem
+            <ChevronRight size={22} aria-hidden="true" />
+          </button>
         </div>
-
-        <button
-          onClick={analisarMensagem}
-          disabled={!mensagem.trim()}
-          aria-label="Analisar a mensagem que você escreveu"
-          className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ backgroundColor: '#2563EB', fontSize: '18px', minHeight: '56px' }}
-        >
-          Verificar mensagem
-          <ChevronRight size={22} aria-hidden="true" />
-        </button>
-
-        <Rodape />
       </div>
     )
   }
