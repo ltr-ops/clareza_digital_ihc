@@ -21,6 +21,7 @@ import {
   Lock,
   LifeBuoy,
   Compass,
+  Wind,
 } from 'lucide-react'
 
 /* ═══════════════════════════════════════════════
@@ -252,12 +253,12 @@ const ClarezaDigital = () => {
   const BotaoCalma = () => (
     <button
       onClick={abrirCalma}
-      aria-label="Pedir ajuda e orientações de segurança"
+      aria-label="Pare alguns segundos antes de tomar qualquer decisão"
       className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-white font-bold shadow-lg hover:shadow-xl transition-all"
-      style={{ backgroundColor: '#D97706', fontSize: '16px', minHeight: '44px' }}
+      style={{ backgroundColor: '#D97706', fontSize: '15px', minHeight: '44px' }}
     >
-      <LifeBuoy size={20} aria-hidden="true" fill="white" />
-      <span>AJUDA</span>
+      <Wind size={20} aria-hidden="true" />
+      <span>PARE E RESPIRE</span>
     </button>
   )
 
