@@ -1095,7 +1095,7 @@ const ClarezaDigital = () => {
               onClick={() => {
                 setMensagem('')
                 setResultado(null)
-                setAnimKey(prev => prev + 1)
+                irParaTela('menu')
               }}
               aria-label={
                 resultado.nivel === 'alto' || resultado.nivel === 'medio'
@@ -1113,18 +1113,6 @@ const ClarezaDigital = () => {
               {(resultado.nivel === 'alto' || resultado.nivel === 'medio')
                 ? 'Entendi, não vou responder'
                 : 'Ok, entendi'}
-            </button>
-            <button
-              onClick={() => {
-                setMensagem('')
-                setResultado(null)
-                setAnimKey(prev => prev + 1)
-              }}
-              aria-label="Analisar outra mensagem"
-              className="w-full p-3 rounded-2xl font-semibold transition-all"
-              style={{ backgroundColor: '#E5E7EB', color: '#374151', fontSize: '16px', minHeight: '48px' }}
-            >
-              Analisar outra mensagem
             </button>
             <button
               onClick={() => irParaTela('menu')}
