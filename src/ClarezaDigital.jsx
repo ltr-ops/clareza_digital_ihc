@@ -22,6 +22,7 @@ import {
   LifeBuoy,
   Compass,
   Wind,
+  Lightbulb,
 } from 'lucide-react'
 
 /* ═══════════════════════════════════════════════
@@ -47,6 +48,8 @@ const ClarezaDigital = () => {
   const [textoEmpatia, setTextoEmpatia] = useState('')
   const [animKey, setAnimKey] = useState(0)
   const [tutorialCopiarPasso, setTutorialCopiarPasso] = useState(0)
+  const [dicaAtual, setDicaAtual] = useState(0)
+  const [dicasConcluido, setDicasConcluido] = useState(false)
 
   // ── Animação de respiração no Modo Calma ──
   useEffect(() => {
@@ -76,6 +79,10 @@ const ClarezaDigital = () => {
     if (nomeTela === 'link') {
       setLink('')
       setResultado(null)
+    }
+    if (nomeTela === 'dicas') {
+      setDicaAtual(0)
+      setDicasConcluido(false)
     }
     setAnalisando(false)
     setMostrarEmpatia(false)
@@ -1574,130 +1581,314 @@ const ClarezaDigital = () => {
   )
 
   // ════════════════════════════════════
-  //  TELA 6 — DICAS RÁPIDAS DE SEGURANÇA
+  //  TELA 6 — DICAS RÁPIDAS DE SEGURANÇA (Stepper)
   // ════════════════════════════════════
-  const renderDicas = () => (
-    <div className="animate-fadeIn" style={{ backgroundColor: '#FFFFFF', minHeight: '100dvh' }}>
-      <Cabecalho />
+  const dicasConteudo = [
+    {
+      titulo: 'Confirme quem é a pessoa',
+      texto: 'Se alguém que você conhece pedir dinheiro ou PIX por mensagem com um número desconhecido, não pague. Ligue para o número antigo da pessoa ou faça uma chamada de vídeo para ter certeza.',
+      icone: UserCheck,
+      cor: 'verde'
+    },
+    {
+      titulo: 'Confira os dados antes de transferir',
+      texto: 'Na hora de fazer qualquer PIX, antes de confirmar, olhe com atenção o nome completo e o CPF de quem vai receber. Confira se são exatamente os da pessoa que você deseja pagar.',
+      icone: ShieldCheck,
+      cor: 'verde'
+    },
+    {
+      titulo: 'Cuidado com promoções e links grátis',
+      texto: 'Desconfie de mensagens com links prometendo prêmios ou bônus em conta. Empresas e bancos reais não enviam esse tipo de mensagem por WhatsApp ou SMS.',
+      icone: LinkIcon,
+      cor: 'ambar'
+    },
+    {
+      titulo: 'Bancos nunca pedem sua senha',
+      texto: 'Nenhum banco real liga, manda e-mail ou mensagem pedindo sua senha, código do cartão ou foto do aplicativo. Se alguém pedir isso, é golpe. Desligue.',
+      icone: Lock,
+      cor: 'ambar'
+    },
+    {
+      titulo: 'Desconfie da urgência e pressão',
+      texto: 'Golpistas tentam te assustar dizendo que sua conta vai ser bloqueada ou que alguém precisa de socorro imediato. Respire. Converse com alguém de confiança antes de qualquer decisão.',
+      icone: Clock,
+      cor: 'ambar'
+    }
+  ]
 
-      <div className="flex justify-center mb-6">
+  const totalDicas = dicasConteudo.length
+
+  const avancarDica = () => {
+    if (dicaAtual < totalDicas - 1) {
+      setDicaAtual(prev => prev + 1)
+    } else {
+      setDicasConcluido(true)
+    }
+  }
+
+  const renderDicas = () => {
+    // ── Tela de conclusão ──
+    if (dicasConcluido) {
+      return (
         <div
-          className="flex items-center justify-center rounded-full"
-          style={{ width: '72px', height: '72px', backgroundColor: '#e8f4e7' }}
+          className="animate-fadeIn flex flex-col"
+          style={{ backgroundColor: '#F0F4F8', minHeight: '100dvh' }}
         >
-          <BookOpen size={40} className="text-[#00451f]" aria-hidden="true" />
-        </div>
-      </div>
-
-      <h2 className="font-bold text-center mb-2" style={{ fontSize: '24px', color: '#00451f', lineHeight: '1.3' }}>
-        Dicas Rápidas de Segurança
-      </h2>
-
-      <p className="text-center mb-8" style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6', padding: '0 12px' }}>
-        Pequenas atitudes que fazem toda a diferença para proteger você e sua família contra golpes.
-      </p>
-
-      {/* Lista de Dicas */}
-      <div className="flex flex-col gap-4 mb-8">
-        {[
-          {
-            titulo: 'Confirme a identidade da pessoa',
-            texto: 'Se receber mensagem de um parente ou amigo pedindo dinheiro ou PIX urgente com um número de telefone novo ou desconhecido, não pague. Ligue para o número antigo dele ou faça uma chamada de vídeo para ter certeza de quem é.',
-            bgColorIcone: '#eff6ff',
-            icone: <UserCheck size={24} style={{ color: '#4a90e2' }} />
-          },
-          {
-            titulo: 'Confira os dados antes de transferir',
-            texto: 'Na hora de fazer qualquer PIX, antes de colocar sua senha ou confirmar, olhe com atenção a tela do seu aplicativo do banco. Confira se o nome completo e o CPF/CNPJ de quem vai receber o dinheiro são exatamente os de quem você deseja pagar.',
-            bgColorIcone: '#e8f4e7',
-            icone: <ShieldCheck size={24} style={{ color: '#22c55e' }} />
-          },
-          {
-            titulo: 'Cuidado com promoções e links grátis',
-            texto: 'Desconfie de links recebidos que prometem prêmios, bônus na sua conta bancária, dinheiro fácil ou promoções boas demais para ser verdade. Empresas e bancos reais não enviam links desse tipo por mensagens estranhas.',
-            bgColorIcone: '#fff7ed',
-            icone: <LinkIcon size={24} style={{ color: '#f59d23' }} />
-          },
-          {
-            titulo: 'Bancos nunca pedem sua senha',
-            texto: 'Os bancos reais nunca telefonam, enviam e-mails ou mandam mensagens de texto pedindo suas senhas, códigos de confirmação, fotos do cartão ou pedindo para fazer qualquer tipo de transferência de teste.',
-            bgColorIcone: '#f5f3ff',
-            icone: <Lock size={24} style={{ color: '#7e5ce6' }} />
-          },
-          {
-            titulo: 'Desconfie da urgência e pressão',
-            texto: 'Golpistas tentam te assustar e fazer você agir rápido dizendo que sua conta será bloqueada ou que alguém precisa de socorro imediato. Respire, pare e converse com uma pessoa de sua inteira confiança antes de tomar qualquer decisão.',
-            bgColorIcone: '#fef2f2',
-            icone: <Clock size={24} style={{ color: '#ef4444' }} />
-          }
-        ].map((dica, idx) => (
+          {/* Cabeçalho simplificado */}
           <div
-            key={idx}
+            className="flex items-center justify-between"
             style={{
-              padding: '20px',
-              backgroundColor: '#ffffff',
-              borderRadius: '20px',
-              boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-              border: '1px solid #f3f4f6',
-              display: 'flex',
-              gap: '16px',
-              alignItems: 'flex-start',
+              backgroundColor: '#FFFFFF',
+              padding: '12px 16px',
+              borderBottom: '0.5px solid #E5E7EB'
+            }}
+          >
+            <button
+              onClick={() => irParaTela('menu')}
+              aria-label="Voltar para o menu principal"
+              className="flex items-center gap-1 px-3 py-2.5 rounded-xl font-semibold hover:bg-[#1A4A8A]/10 transition-colors"
+              style={{ color: '#1A4A8A', fontSize: '16px', minHeight: '48px' }}
+            >
+              <ArrowLeft size={20} aria-hidden="true" />
+              <span>Voltar</span>
+            </button>
+            <BotaoCalma />
+          </div>
+
+          {/* Conteúdo centralizado */}
+          <div style={{ padding: '0 32px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* Ícone de conclusão */}
+            <div
+              className="flex items-center justify-center"
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                backgroundColor: '#F0FDF4',
+                marginTop: '40px'
+              }}
+            >
+              <ShieldCheck size={40} style={{ color: '#16A34A' }} aria-hidden="true" />
+            </div>
+
+            <h1
+              className="font-bold text-center"
+              style={{ fontSize: '28px', color: '#1A4A8A', marginTop: '20px' }}
+            >
+              Muito bem!
+            </h1>
+
+            <h2
+              className="font-bold text-center"
+              style={{ fontSize: '20px', color: '#1C1C1E', marginTop: '8px' }}
+            >
+              Você já sabe como se proteger.
+            </h2>
+
+            <p
+              className="text-center"
+              style={{ fontSize: '17px', color: '#4B5563', lineHeight: '1.75', marginTop: '16px' }}
+            >
+              Você leu as 5 dicas de segurança. Agora está mais preparada para reconhecer golpes e proteger seu dinheiro. Parabéns por cuidar da sua segurança!
+            </p>
+
+            {/* Card de lembrete */}
+            <div
+              className="flex items-start gap-3 w-full"
+              style={{
+                backgroundColor: '#FFFBEB',
+                border: '0.5px solid #FCD34D',
+                borderRadius: '12px',
+                padding: '16px',
+                marginTop: '24px'
+              }}
+            >
+              <Lightbulb size={20} style={{ color: '#D97706', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+              <p style={{ fontSize: '16px', color: '#92400E', lineHeight: '1.6', margin: 0 }}>
+                Lembre-se: na dúvida, espere. O tempo é o pior inimigo do golpista.
+              </p>
+            </div>
+
+            {/* Botão principal */}
+            <button
+              onClick={() => irParaTela('menu')}
+              aria-label="Voltar ao início"
+              className="w-full font-bold text-white transition-all active:scale-[0.97]"
+              style={{
+                backgroundColor: '#1A4A8A',
+                fontSize: '18px',
+                minHeight: '58px',
+                borderRadius: '14px',
+                marginTop: '28px',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'transform 150ms ease'
+              }}
+            >
+              Voltar ao início
+            </button>
+          </div>
+
+          {/* Rodapé */}
+          <footer className="text-center py-6 mt-8" style={{ color: '#9CA3AF' }}>
+            <p className="font-medium" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>
+              CLAREZA DIGITAL — SEU ASSISTENTE DE SEGURANÇA
+            </p>
+          </footer>
+        </div>
+      )
+    }
+
+    // ── Tela de dica individual (stepper) ──
+    const dica = dicasConteudo[dicaAtual]
+    const IconeAtual = dica.icone
+    const isVerde = dica.cor === 'verde'
+    const iconeBg = isVerde ? '#F0FDF4' : '#FFFBEB'
+    const iconeCor = isVerde ? '#16A34A' : '#D97706'
+    const progresso = ((dicaAtual + 1) / totalDicas) * 100
+    const isUltima = dicaAtual === totalDicas - 1
+
+    return (
+      <div
+        className="animate-fadeIn flex flex-col"
+        style={{ backgroundColor: '#F0F4F8', minHeight: '100dvh' }}
+      >
+        {/* ── Cabeçalho ── */}
+        <div
+          className="flex items-center justify-between"
+          style={{
+            backgroundColor: '#FFFFFF',
+            padding: '12px 16px',
+            borderBottom: '0.5px solid #E5E7EB'
+          }}
+        >
+          <button
+            onClick={() => irParaTela('menu')}
+            aria-label="Voltar para o menu principal"
+            className="flex items-center gap-1 px-3 py-2.5 rounded-xl font-semibold hover:bg-[#1A4A8A]/10 transition-colors"
+            style={{ color: '#1A4A8A', fontSize: '16px', minHeight: '48px' }}
+          >
+            <ArrowLeft size={20} aria-hidden="true" />
+            <span>Voltar</span>
+          </button>
+          <BotaoCalma />
+        </div>
+
+        {/* ── Indicador de progresso ── */}
+        <div style={{ padding: '14px 16px' }}>
+          <p
+            className="text-center font-medium"
+            style={{ fontSize: '16px', color: '#4B5563', marginBottom: '10px' }}
+          >
+            Dica {dicaAtual + 1} de {totalDicas}
+          </p>
+          <div
+            role="progressbar"
+            aria-valuenow={dicaAtual + 1}
+            aria-valuemin={0}
+            aria-valuemax={totalDicas}
+            aria-label={`Progresso: dica ${dicaAtual + 1} de ${totalDicas}`}
+            style={{
+              width: '100%',
+              height: '6px',
+              backgroundColor: '#E5E7EB',
+              borderRadius: '3px',
+              overflow: 'hidden'
             }}
           >
             <div
               style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '12px',
-                backgroundColor: dica.bgColorIcone,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
+                width: `${progresso}%`,
+                height: '100%',
+                backgroundColor: '#16A34A',
+                borderRadius: '3px',
+                transition: 'width 400ms ease'
+              }}
+            />
+          </div>
+        </div>
+
+        {/* ── Card da dica ── */}
+        <div style={{ padding: '0 16px', flex: 1 }}>
+          <div
+            key={dicaAtual}
+            style={{
+              backgroundColor: '#FFFFFF',
+              border: '0.5px solid #E5E7EB',
+              borderRadius: '16px',
+              padding: '28px 24px',
+              animation: 'dicaFadeIn 300ms ease forwards'
+            }}
+          >
+            {/* Círculo do ícone */}
+            <div
+              className="flex items-center justify-center"
+              style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                backgroundColor: iconeBg
               }}
             >
-              {dica.icone}
+              <IconeAtual size={28} style={{ color: iconeCor }} aria-hidden="true" />
             </div>
-            <div style={{ flex: 1 }}>
-              <h3
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '700',
-                  color: '#111827',
-                  margin: '0 0 6px 0',
-                  lineHeight: '1.3'
-                }}
-              >
-                {dica.titulo}
-              </h3>
-              <p
-                style={{
-                  fontSize: '15px',
-                  color: '#4B5563',
-                  margin: 0,
-                  lineHeight: '1.6'
-                }}
-              >
-                {dica.texto}
-              </p>
-            </div>
+
+            {/* Título */}
+            <h2
+              aria-live="polite"
+              className="font-bold"
+              style={{
+                fontSize: '22px',
+                color: '#1C1C1E',
+                marginTop: '20px',
+                lineHeight: '1.3'
+              }}
+            >
+              {dica.titulo}
+            </h2>
+
+            {/* Texto */}
+            <p
+              style={{
+                fontSize: '17px',
+                color: '#374151',
+                lineHeight: '1.75',
+                marginTop: '14px'
+              }}
+            >
+              {dica.texto}
+            </p>
           </div>
-        ))}
+
+          {/* ── Botão de ação principal ── */}
+          <button
+            onClick={avancarDica}
+            aria-label={isUltima ? 'Ver conclusão das dicas de segurança' : 'Ir para a próxima dica'}
+            className="w-full font-bold text-white transition-all active:scale-[0.97]"
+            style={{
+              backgroundColor: '#1D6F42',
+              fontSize: '18px',
+              minHeight: '58px',
+              borderRadius: '14px',
+              marginTop: '20px',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'transform 150ms ease'
+            }}
+          >
+            {isUltima ? 'Ver conclusão →' : 'Próxima dica →'}
+          </button>
+        </div>
+
+        {/* ── Rodapé ── */}
+        <footer className="text-center py-6" style={{ color: '#9CA3AF', marginTop: '20px' }}>
+          <p className="font-medium" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>
+            CLAREZA DIGITAL — SEU ASSISTENTE DE SEGURANÇA
+          </p>
+        </footer>
       </div>
-
-      <button
-        onClick={() => irParaTela('menu')}
-        aria-label="Voltar para a tela inicial"
-        className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all"
-        style={{ backgroundColor: '#00451f', fontSize: '18px', minHeight: '56px', marginBottom: '16px' }}
-      >
-        <CheckCircle size={22} aria-hidden="true" />
-        Entendi
-      </button>
-
-      <Rodape />
-    </div>
-  )
+    )
+  }
 
   // ════════════════════════════════════
   //  RENDER PRINCIPAL
