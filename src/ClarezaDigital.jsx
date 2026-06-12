@@ -25,6 +25,8 @@ import {
   Lightbulb,
 } from 'lucide-react'
 
+import VerificarLink from './VerificarLink'
+
 /* ═══════════════════════════════════════════════
    CLAREZA DIGITAL — Assistente de Segurança Digital
    Projeto acadêmico IHC — IFPE Campus Belo Jardim
@@ -174,65 +176,7 @@ const ClarezaDigital = () => {
     }, 1500)
   }, [mensagem])
 
-  // ── Lógica de análise de link ──
-  const analisarLink = useCallback(() => {
-    setAnalisando(true)
-    setTimeout(() => {
-      const linkLower = link.toLowerCase()
-      const padroesSuspeitos = [
-        'bit.ly', 'tinyurl', 'encurtador', '.xyz', '.top', '.tk',
-        'bonus', 'promo', 'gratis', 'oferta', 'ganhou', 'clique',
-        '.ru', '.cn', 'free', 'premio', 'sorteio', 'login-',
-        'seguranca-', 'atualizar-', 'confirmar-'
-      ]
-      const sinais = padroesSuspeitos.filter(p => linkLower.includes(p))
-      const muitosHifens = (linkLower.match(/-/g) || []).length > 3
-      const muitoLongo = linkLower.length > 60
-
-      if (sinais.length > 0) {
-        setResultado({
-          nivel: 'suspeito',
-          motivos: sinais.map(s => {
-            const mapa = {
-              'bit.ly': 'Usa endereço encurtado (muito comum em golpes)',
-              'tinyurl': 'Usa endereço encurtado (pode esconder o destino real)',
-              'encurtador': 'Usa serviço para esconder o endereço real',
-              '.xyz': 'Termina com .xyz (incomum para sites confiáveis)',
-              '.top': 'Termina com .top (muito usado em golpes)',
-              '.tk': 'Termina com .tk (muito usado em golpes)',
-              'bonus': 'Promete bônus (sinal de golpe)',
-              'promo': 'Fala sobre promoção (cuidado!)',
-              'gratis': 'Promete algo grátis',
-              'oferta': 'Usa a palavra oferta',
-              'ganhou': 'Diz que você ganhou algo',
-              'clique': 'Pede para clicar',
-              '.ru': 'Domínio estrangeiro suspeito',
-              '.cn': 'Domínio estrangeiro suspeito',
-              'free': 'Promete algo grátis',
-              'premio': 'Fala sobre prêmio',
-              'sorteio': 'Fala sobre sorteio',
-              'login-': 'Tenta imitar página de entrada',
-              'seguranca-': 'Tenta parecer ser sobre segurança',
-              'atualizar-': 'Tenta parecer atualização oficial',
-              'confirmar-': 'Tenta parecer confirmação oficial'
-            }
-            return mapa[s] || `Contém "${s}"`
-          })
-        })
-      } else if (muitosHifens || muitoLongo) {
-        setResultado({
-          nivel: 'atencao',
-          motivos: [
-            muitosHifens ? 'Endereço com muitos tracinhos (incomum em sites reais)' : null,
-            muitoLongo ? 'Endereço muito longo (sites reais costumam ser curtos)' : null
-          ].filter(Boolean)
-        })
-      } else {
-        setResultado({ nivel: 'possivelSeguro', motivos: [] })
-      }
-      setAnalisando(false)
-    }, 1500)
-  }, [link])
+  // ── Lógica de análise de link movida para VerificarLink ──
 
   // ── Cálculo de risco do PIX ──
   const calcularRiscoPix = useCallback(() => {
@@ -1311,174 +1255,7 @@ const ClarezaDigital = () => {
   // ════════════════════════════════════
   //  TELA 4 — VERIFICAR LINK
   // ════════════════════════════════════
-  const renderLink = () => {
-    if (analisando) {
-      return (
-        <div style={{ backgroundColor: '#F0F4F8' }}>
-          <Cabecalho />
-          <SpinnerAnalise texto="Verificando o endereço..." />
-          <Rodape />
-        </div>
-      )
-    }
-
-    // Resultado
-    if (resultado) {
-      const ehSuspeito = resultado.nivel === 'suspeito' || resultado.nivel === 'atencao'
-
-      return (
-        <div className="animate-fadeIn" style={{ backgroundColor: '#F0F4F8' }}>
-          <Cabecalho />
-
-          {ehSuspeito ? (
-            <div
-              className="rounded-2xl p-6 mb-6"
-              style={{ backgroundColor: '#FFFBEB', border: '2px solid #FDE68A' }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <XCircle size={40} className="text-[#D97706] shrink-0" aria-hidden="true" />
-                <h2 className="font-bold" style={{ fontSize: '22px', color: '#92400E', lineHeight: '1.3' }}>
-                  Não clique nesse link!
-                </h2>
-              </div>
-
-              {resultado.motivos && resultado.motivos.length > 0 && (
-                <ul className="flex flex-col gap-3 mb-4">
-                  {resultado.motivos.map((motivo, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-2 p-3 rounded-xl"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}
-                    >
-                      <AlertTriangle size={20} className="text-[#D97706] shrink-0 mt-0.5" aria-hidden="true" />
-                      <span style={{ fontSize: '16px', color: '#374151', lineHeight: '1.5' }}>
-                        {motivo}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              <p style={{ fontSize: '16px', color: '#374151', lineHeight: '1.6', marginBottom: '8px' }}>
-                Esse tipo de endereço é muito usado em golpes. Apague a mensagem.
-              </p>
-              <p className="font-semibold" style={{ fontSize: '16px', color: '#92400E', lineHeight: '1.6' }}>
-                Bancos e o governo nunca mandam endereços assim para pedir dados.
-              </p>
-            </div>
-          ) : (
-            <div
-              className="rounded-2xl p-6 mb-6"
-              style={{ backgroundColor: '#ECFDF5', border: '2px solid #BBF7D0' }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <ShieldCheck size={40} className="text-[#1D6F42] shrink-0" aria-hidden="true" />
-                <h2 className="font-bold" style={{ fontSize: '22px', color: '#1D6F42', lineHeight: '1.3' }}>
-                  Não encontramos sinais óbvios de perigo.
-                </h2>
-              </div>
-              <p style={{ fontSize: '16px', color: '#374151', lineHeight: '1.6' }}>
-                Mas mesmo assim, nunca clique em endereços para digitar sua senha ou dados bancários.
-              </p>
-            </div>
-          )}
-
-          <div className="flex flex-col gap-3">
-            <button
-              onClick={() => irParaTela('menu')}
-              aria-label={ehSuspeito ? 'Entendi, não vou clicar no link suspeito' : 'Entendido, vou tomar cuidado'}
-              className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all"
-              style={{
-                backgroundColor: ehSuspeito ? '#D97706' : '#1D6F42',
-                fontSize: '18px',
-                minHeight: '56px'
-              }}
-            >
-              <CheckCircle size={22} aria-hidden="true" />
-              {ehSuspeito ? 'Entendi, não vou clicar' : 'Entendido'}
-            </button>
-            <button
-              onClick={() => {
-                setLink('')
-                setResultado(null)
-                setAnimKey(prev => prev + 1)
-              }}
-              aria-label="Verificar outro link"
-              className="w-full p-3 rounded-2xl font-semibold transition-all"
-              style={{ backgroundColor: '#E5E7EB', color: '#374151', fontSize: '16px', minHeight: '48px' }}
-            >
-              Verificar outro link
-            </button>
-            <button
-              onClick={() => irParaTela('menu')}
-              aria-label="Voltar ao início"
-              className="w-full flex items-center justify-center gap-1 p-3 rounded-2xl font-semibold transition-all"
-              style={{ color: '#1A4A8A', fontSize: '16px', minHeight: '48px' }}
-            >
-              <ArrowLeft size={18} aria-hidden="true" />
-              Início
-            </button>
-          </div>
-
-          <MensagemFinal />
-          <Rodape />
-        </div>
-      )
-    }
-
-    // Formulário
-    return (
-      <div className="animate-fadeIn" style={{ backgroundColor: '#F0F4F8' }}>
-        <Cabecalho />
-
-        <div className="flex justify-center mb-6">
-          <div
-            className="flex items-center justify-center rounded-full"
-            style={{ width: '72px', height: '72px', backgroundColor: '#EFF6FF' }}
-          >
-            <LinkIcon size={40} className="text-[#2563EB]" aria-hidden="true" />
-          </div>
-        </div>
-
-        <h2 className="font-bold text-center mb-2" style={{ fontSize: '22px', color: '#1C1C1E', lineHeight: '1.4' }}>
-          Escreva ou cole aqui o link (endereço azul)
-        </h2>
-
-        <p className="text-center mb-6" style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6' }}>
-          É o texto que mandaram para você clicar. Para colar, aperte e segure no quadro abaixo.
-        </p>
-
-        <div className="mb-6">
-          <label htmlFor="link-texto" className="block font-medium mb-2" style={{ fontSize: '16px', color: '#374151' }}>
-            Endereço recebido
-          </label>
-          <input
-            id="link-texto"
-            type="text"
-            placeholder="Ex: www.banco-oferta.com.br"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            className="w-full p-4 rounded-2xl bg-white border-2 border-gray-200"
-            style={{ fontSize: '16px', color: '#1C1C1E', minHeight: '56px' }}
-            aria-label="Digite ou cole aqui o endereço que você recebeu"
-          />
-        </div>
-
-        <button
-          onClick={analisarLink}
-          disabled={!link.trim()}
-          aria-label="Verificar se o endereço é seguro"
-          className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ backgroundColor: '#2563EB', fontSize: '18px', minHeight: '56px' }}
-        >
-          Checar se é seguro
-          <ChevronRight size={22} aria-hidden="true" />
-        </button>
-
-        <Rodape />
-      </div>
-    )
-  }
+  // ── renderLink removido — refatorado para o componente VerificarLink ──
 
   // ════════════════════════════════════
   //  TELA 5 — MODO CALMA
@@ -1910,7 +1687,7 @@ const ClarezaDigital = () => {
         {tela === 'menu' && renderMenu()}
         {tela === 'pix' && renderPix()}
         {tela === 'mensagem' && renderMensagem()}
-        {tela === 'link' && renderLink()}
+        {tela === 'link' && <VerificarLink onVoltar={() => irParaTela('menu')} onConcluir={() => irParaTela('menu')} />}
         {tela === 'calma' && renderCalma()}
         {tela === 'dicas' && renderDicas()}
       </div>
