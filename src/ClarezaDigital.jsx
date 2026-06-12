@@ -233,8 +233,8 @@ const ClarezaDigital = () => {
   // Rodapé
   const Rodape = ({ style }) => (
     <footer className="flex items-center justify-center gap-[6px] pb-6" style={{ color: '#9CA3AF', paddingTop: '16px', marginTop: '32px', ...style }}>
-      <Shield size={12} aria-hidden="true" />
-      <span className="font-medium uppercase" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>
+      <Shield size={16} aria-hidden="true" />
+      <span className="font-medium uppercase" style={{ fontSize: '14px', letterSpacing: '0.05em' }}>
         CLAREZA DIGITAL — SEU ASSISTENTE DE SEGURANÇA
       </span>
     </footer>
