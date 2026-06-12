@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   ShieldCheck,
+  Shield,
   Link as LinkIcon,
   Heart,
   ChevronRight,
@@ -230,11 +231,12 @@ const ClarezaDigital = () => {
   )
 
   // Rodapé
-  const Rodape = () => (
-    <footer className="text-center py-6 mt-8" style={{ color: '#9CA3AF' }}>
-      <p className="font-medium" style={{ fontSize: '13px', letterSpacing: '0.05em' }}>
+  const Rodape = ({ style }) => (
+    <footer className="flex items-center justify-center gap-[6px] pb-6" style={{ color: '#9CA3AF', paddingTop: '16px', marginTop: '32px', ...style }}>
+      <Shield size={12} aria-hidden="true" />
+      <span className="font-medium uppercase" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>
         CLAREZA DIGITAL — SEU ASSISTENTE DE SEGURANÇA
-      </p>
+      </span>
     </footer>
   )
 
@@ -559,30 +561,7 @@ const ClarezaDigital = () => {
       </div>
 
       {/* ── 4. MARCA DO APLICATIVO (Baixa prioridade, rodapé) ── */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px',
-          padding: '20px 20px 24px',
-          opacity: 0.6,
-          marginTop: 'auto',
-        }}
-      >
-        <ShieldCheck size={16} style={{ color: '#9CA3AF' }} aria-hidden="true" />
-        <span
-          style={{
-            fontSize: '13px',
-            fontWeight: '600',
-            color: '#9CA3AF',
-            letterSpacing: '0.5px',
-            textTransform: 'uppercase',
-          }}
-        >
-          Clareza Digital
-        </span>
-      </div>
+      <Rodape style={{ marginTop: 'auto' }} />
     </div>
   )
 
