@@ -27,6 +27,7 @@ import {
 } from 'lucide-react'
 
 import VerificarLink from './VerificarLink'
+import PareERespire from './PareERespire'
 
 /* ═══════════════════════════════════════════════
    CLAREZA DIGITAL — Assistente de Segurança Digital
@@ -46,22 +47,12 @@ const ClarezaDigital = () => {
   const [resultado, setResultado] = useState(null)
   const [analisando, setAnalisando] = useState(false)
   const [telaAnterior, setTelaAnterior] = useState(null)
-  const [respiraInspire, setRespiraInspire] = useState(true)
   const [mostrarEmpatia, setMostrarEmpatia] = useState(false)
   const [textoEmpatia, setTextoEmpatia] = useState('')
   const [animKey, setAnimKey] = useState(0)
   const [tutorialCopiarPasso, setTutorialCopiarPasso] = useState(0)
   const [dicaAtual, setDicaAtual] = useState(0)
   const [dicasConcluido, setDicasConcluido] = useState(false)
-
-  // ── Animação de respiração no Modo Calma ──
-  useEffect(() => {
-    if (tela !== 'calma') return
-    const intervalo = setInterval(() => {
-      setRespiraInspire(prev => !prev)
-    }, 4000)
-    return () => clearInterval(intervalo)
-  }, [tela])
 
   // ── Funções de navegação ──
   const irParaTela = useCallback((nomeTela) => {
@@ -95,7 +86,6 @@ const ClarezaDigital = () => {
     setTelaAnterior(tela)
     setAnimKey(prev => prev + 1)
     setTela('calma')
-    setRespiraInspire(true)
   }, [tela])
 
   const voltarDeCalma = useCallback(() => {
@@ -1237,104 +1227,6 @@ const ClarezaDigital = () => {
   // ── renderLink removido — refatorado para o componente VerificarLink ──
 
   // ════════════════════════════════════
-  //  TELA 5 — MODO CALMA
-  // ════════════════════════════════════
-  const renderCalma = () => (
-    <div className="animate-fadeIn" style={{ backgroundColor: '#F0F4F8' }}>
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={voltarDeCalma}
-          aria-label="Fechar modo calma e voltar"
-          className="flex items-center gap-1 px-3 py-2.5 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
-          style={{ color: '#4B5563', fontSize: '16px', minHeight: '44px' }}
-        >
-          <X size={20} aria-hidden="true" />
-          Fechar
-        </button>
-      </div>
-
-      <h1 className="font-bold text-center mb-2" style={{ fontSize: '26px', color: '#1A4A8A', lineHeight: '1.3' }}>
-        Calma. Você está em segurança.
-      </h1>
-
-      <p className="text-center mb-10" style={{ fontSize: '18px', color: '#4B5563', lineHeight: '1.6' }}>
-        Nenhum golpista pode te forçar a fazer nada. Você tem tempo.
-      </p>
-
-      {/* Círculo de respiração */}
-      <div className="flex flex-col items-center justify-center mb-10">
-        <div
-          className="flex items-center justify-center rounded-full animate-breathe"
-          style={{
-            width: '200px',
-            height: '200px',
-            backgroundColor: '#93C5FD',
-            boxShadow: '0 0 40px rgba(147, 197, 253, 0.5)',
-          }}
-        >
-          <span
-            className="font-semibold text-white text-center transition-opacity duration-700"
-            style={{ fontSize: '22px' }}
-          >
-            {respiraInspire ? 'Inspire...' : 'Expire...'}
-          </span>
-        </div>
-      </div>
-
-      {/* Lembretes */}
-      <div className="flex flex-col gap-3 mb-8">
-        {[
-          { emoji: '🏦', texto: 'Nenhum banco real pede sua senha por mensagem.' },
-          { emoji: '💪', texto: 'Dinheiro perdido pode ser recuperado. Fique com calma.' },
-          { emoji: '📞', texto: 'Ligue para um familiar antes de qualquer decisão.' },
-        ].map((item, idx) => (
-          <div
-            key={idx}
-            className="flex items-start gap-3 p-4 rounded-2xl bg-white shadow-sm"
-            style={{ border: '1px solid #E5E7EB' }}
-          >
-            <span className="text-2xl shrink-0" aria-hidden="true">{item.emoji}</span>
-            <p className="font-medium" style={{ fontSize: '16px', color: '#374151', lineHeight: '1.6' }}>
-              {item.texto}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Botões */}
-      <div className="flex flex-col gap-3">
-        <button
-          onClick={voltarDeCalma}
-          aria-label="Já me sinto melhor, voltar para onde eu estava"
-          className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all"
-          style={{ backgroundColor: '#1A4A8A', fontSize: '18px', minHeight: '56px' }}
-        >
-          <CheckCircle size={22} aria-hidden="true" fill="white" />
-          Já me sinto melhor. Voltar.
-        </button>
-        <a
-          href="tel:00000000000"
-          aria-label="Ligar para um familiar de confiança"
-          className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl font-semibold transition-all"
-          style={{
-            backgroundColor: '#E5E7EB',
-            color: '#374151',
-            fontSize: '16px',
-            minHeight: '48px',
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <Phone size={20} aria-hidden="true" />
-          Ligar para familiar
-        </a>
-      </div>
-
-      <Rodape />
-    </div>
-  )
 
   // ════════════════════════════════════
   //  TELA 6 — DICAS RÁPIDAS DE SEGURANÇA (Stepper)
@@ -1667,7 +1559,7 @@ const ClarezaDigital = () => {
         {tela === 'pix' && renderPix()}
         {tela === 'mensagem' && renderMensagem()}
         {tela === 'link' && <VerificarLink onVoltar={() => irParaTela('menu')} onConcluir={() => irParaTela('menu')} />}
-        {tela === 'calma' && renderCalma()}
+        {tela === 'calma' && <PareERespire onVoltar={voltarDeCalma} />}
         {tela === 'dicas' && renderDicas()}
       </div>
     </div>
