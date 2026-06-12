@@ -897,15 +897,15 @@ const ClarezaDigital = () => {
                 <CheckCircle size={22} aria-hidden="true" />
                 Entendi, não vou pagar
               </button>
-              <button
-                onClick={() => irParaTela('menu')}
+              <a
+                href="tel:00000000000"
                 aria-label="Ligar para um familiar antes de decidir"
                 className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white transition-all"
-                style={{ backgroundColor: '#2563EB', fontSize: '18px', minHeight: '56px' }}
+                style={{ backgroundColor: '#2563EB', fontSize: '18px', minHeight: '56px', textDecoration: 'none' }}
               >
                 <Phone size={22} aria-hidden="true" />
                 Falar com familiar
-              </button>
+              </a>
             </div>
 
             <MensagemFinal />
