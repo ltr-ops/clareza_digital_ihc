@@ -28,6 +28,7 @@ import {
 
 import VerificarLink from './VerificarLink'
 import PareERespire from './PareERespire'
+import BoasVindas from './BoasVindas'
 
 /* ═══════════════════════════════════════════════
    CLAREZA DIGITAL — Assistente de Segurança Digital
@@ -38,7 +39,8 @@ import PareERespire from './PareERespire'
 
 const ClarezaDigital = () => {
   // ── Estados principais ──
-  const [tela, setTela] = useState('menu')
+  const [tela, setTela] = useState('splash')
+  const [temConta, setTemConta] = useState(false)
   const [pixPasso, setPixPasso] = useState(1)
   const [pixRespostas, setPixRespostas] = useState({})
   const [pixValor, setPixValor] = useState('')
@@ -53,6 +55,20 @@ const ClarezaDigital = () => {
   const [tutorialCopiarPasso, setTutorialCopiarPasso] = useState(0)
   const [dicaAtual, setDicaAtual] = useState(0)
   const [dicasConcluido, setDicasConcluido] = useState(false)
+
+  // ── Verificar se o usuário já criou conta (localStorage) ──
+  useEffect(() => {
+    const contaCriada = localStorage.getItem('clareza_digital_conta')
+    if (contaCriada) setTemConta(true)
+  }, [])
+
+  // ── Função de entrada (splash → menu) ──
+  const handleEntrar = useCallback(() => {
+    localStorage.setItem('clareza_digital_conta', 'true')
+    setTemConta(true)
+    setAnimKey(prev => prev + 1)
+    setTela('menu')
+  }, [])
 
   // ── Funções de navegação ──
   const irParaTela = useCallback((nomeTela) => {
@@ -1554,7 +1570,7 @@ const ClarezaDigital = () => {
         key={animKey}
         className={(tela === 'splash' || tela === 'menu') ? 'app-content-splash' : 'app-content'}
       >
-        {tela === 'splash' && renderSplash()}
+        {tela === 'splash' && <BoasVindas onEntrar={handleEntrar} isLogin={temConta} />}
         {tela === 'menu' && renderMenu()}
         {tela === 'pix' && renderPix()}
         {tela === 'mensagem' && renderMensagem()}
