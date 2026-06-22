@@ -29,6 +29,7 @@ import {
 import VerificarLink from './VerificarLink'
 import PareERespire from './PareERespire'
 import BoasVindas from './BoasVindas'
+import Cadastro from './Cadastro'
 
 /* ═══════════════════════════════════════════════
    CLAREZA DIGITAL — Assistente de Segurança Digital
@@ -62,9 +63,18 @@ const ClarezaDigital = () => {
     if (contaCriada) setTemConta(true)
   }, [])
 
-  // ── Função de entrada (splash → menu) ──
+  // ── Função de entrada (splash → menu ou cadastro) ──
   const handleEntrar = useCallback(() => {
-    localStorage.setItem('clareza_digital_conta', 'true')
+    if (temConta) {
+      setAnimKey(prev => prev + 1)
+      setTela('menu')
+    } else {
+      setAnimKey(prev => prev + 1)
+      setTela('cadastro')
+    }
+  }, [temConta])
+
+  const handleConcluirCadastro = useCallback(() => {
     setTemConta(true)
     setAnimKey(prev => prev + 1)
     setTela('menu')
@@ -1568,9 +1578,10 @@ const ClarezaDigital = () => {
       {/* Conteúdo com padding responsivo, exceto splash/menu que são full */}
       <div
         key={animKey}
-        className={(tela === 'splash' || tela === 'menu') ? 'app-content-splash' : 'app-content'}
+        className={(tela === 'splash' || tela === 'menu' || tela === 'cadastro') ? 'app-content-splash' : 'app-content'}
       >
         {tela === 'splash' && <BoasVindas onEntrar={handleEntrar} isLogin={temConta} />}
+        {tela === 'cadastro' && <Cadastro onConcluir={handleConcluirCadastro} />}
         {tela === 'menu' && renderMenu()}
         {tela === 'pix' && renderPix()}
         {tela === 'mensagem' && renderMensagem()}
