@@ -56,6 +56,7 @@ const ClarezaDigital = () => {
   const [dicaAtual, setDicaAtual] = useState(0)
   const [dicasConcluido, setDicasConcluido] = useState(false)
   const [descricaoLivre, setDescricaoLivre] = useState('')
+  const [resultadoAnaliseLivre, setResultadoAnaliseLivre] = useState(null)
 
   // ── Verificar se o usuário já criou conta (localStorage) ──
   useEffect(() => {
@@ -100,6 +101,10 @@ const ClarezaDigital = () => {
       setLink('')
       setResultado(null)
     }
+    if (nomeTela === 'menu') {
+      setDescricaoLivre('')
+      setResultadoAnaliseLivre(null)
+    }
     if (nomeTela === 'dicas') {
       setDicaAtual(0)
       setDicasConcluido(false)
@@ -107,6 +112,65 @@ const ClarezaDigital = () => {
     setAnalisando(false)
     setMostrarEmpatia(false)
   }, [])
+
+  const processarDescricaoLivre = () => {
+    if (!descricaoLivre.trim()) return
+
+    const texto = descricaoLivre.toLowerCase()
+
+    // Cenário 1: Mensagem Suspeita
+    const palavrasMensagem = ['mensagem', 'whatsapp', 'sms', 'email', 'e-mail', 'conversa', 'texto', 'telegram', 'instagram', 'facebook', 'estranha']
+    if (palavrasMensagem.some(p => texto.includes(p))) {
+      setResultadoAnaliseLivre({
+        tipo: 'redirecionamento',
+        destino: 'mensagem',
+        mensagem: 'Parece que sua situação está relacionada a uma mensagem suspeita. Vamos analisar melhor.'
+      })
+      irParaTela('analise-livre')
+      return
+    }
+
+    // Cenário 1: Pedido de PIX
+    const palavrasPix = ['pix', 'pagamento', 'dinheiro', 'transferência', 'depósito', 'valor', 'cobrança', 'pagar', 'urgente']
+    if (palavrasPix.some(p => texto.includes(p))) {
+      setResultadoAnaliseLivre({
+        tipo: 'redirecionamento',
+        destino: 'pix',
+        mensagem: 'Parece que sua situação envolve um pedido de PIX ou transferência.'
+      })
+      irParaTela('analise-livre')
+      return
+    }
+
+    // Cenário 1: Recebi algo para clicar
+    const palavrasLink = ['link', 'site', 'clique', 'clicar', 'endereço', 'url', 'página', 'atualização', 'cadastro', 'acessar']
+    if (palavrasLink.some(p => texto.includes(p))) {
+      setResultadoAnaliseLivre({
+        tipo: 'redirecionamento',
+        destino: 'link',
+        mensagem: 'Parece que você recebeu algo para clicar.'
+      })
+      irParaTela('analise-livre')
+      return
+    }
+
+    // Cenário 2: Situação Não Relacionada
+    let resposta = "Não conseguimos identificar exatamente a situação.\n\nPor segurança:\n\n• Não compartilhe senhas.\n• Não envie dinheiro.\n• Não forneça documentos pessoais.\n• Procure ajuda de uma pessoa de confiança se continuar com dúvidas."
+
+    if (texto.includes('ligação') || texto.includes('bloqueada') || texto.includes('telefonema') || texto.includes('telefone')) {
+      resposta = "Essa situação pode estar relacionada a uma tentativa de golpe por ligação telefônica.\n\nNão forneça senhas ou dados pessoais.\n\nEntre em contato diretamente com a instituição citada para confirmar a informação."
+    } else if (texto.includes('prêmio') || texto.includes('ganhei') || texto.includes('sorteio')) {
+      resposta = "Desconfie de prêmios inesperados.\n\nEvite compartilhar dados pessoais antes de confirmar a origem da informação."
+    } else if (texto.includes('cpf') || texto.includes('rg') || texto.includes('documento') || texto.includes('dados pessoais')) {
+      resposta = "Tenha cuidado ao compartilhar documentos e dados pessoais.\n\nSempre confirme quem está solicitando essas informações."
+    }
+
+    setResultadoAnaliseLivre({
+      tipo: 'orientacao',
+      mensagem: resposta
+    })
+    irParaTela('analise-livre')
+  }
 
   const abrirCalma = useCallback(() => {
     setTelaAnterior(tela)
@@ -573,6 +637,29 @@ const ClarezaDigital = () => {
             onFocus={e => e.currentTarget.style.borderColor = '#16A34A'}
             onBlur={e => e.currentTarget.style.borderColor = '#D1D5DB'}
           />
+          {descricaoLivre.trim().length > 0 && (
+            <button
+              onClick={processarDescricaoLivre}
+              style={{
+                width: '100%',
+                marginTop: '12px',
+                padding: '14px',
+                backgroundColor: '#16A34A',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+              }}
+            >
+              Analisar situação
+            </button>
+          )}
         </div>
       </div>
 
@@ -1600,6 +1687,118 @@ const ClarezaDigital = () => {
   }
 
   // ════════════════════════════════════
+  //  TELA 6 — ANÁLISE DE SITUAÇÃO LIVRE
+  // ════════════════════════════════════
+  const renderAnaliseLivre = () => (
+    <div className="animate-fadeIn" style={{ backgroundColor: '#F8FAF9', minHeight: '100dvh', padding: '24px 20px', display: 'flex', flexDirection: 'column' }}>
+      <div className="flex items-center gap-3 mb-6">
+        <button
+          onClick={() => irParaTela('menu')}
+          className="flex items-center justify-center rounded-full bg-white border border-gray-200"
+          style={{ width: '40px', height: '40px' }}
+          aria-label="Voltar para o menu"
+        >
+          <ArrowLeft size={20} className="text-gray-600" aria-hidden="true" />
+        </button>
+        <span className="font-semibold text-gray-800" style={{ fontSize: '18px' }}>
+          Análise da Situação
+        </span>
+      </div>
+
+      <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', marginBottom: '24px' }}>
+        <p style={{ fontSize: '18px', color: '#1C1C1E', lineHeight: '1.6', fontWeight: '500', whiteSpace: 'pre-wrap' }}>
+          {resultadoAnaliseLivre?.mensagem}
+        </p>
+
+        {resultadoAnaliseLivre?.tipo === 'redirecionamento' && (
+          <button
+            onClick={() => irParaTela(resultadoAnaliseLivre.destino)}
+            style={{
+              width: '100%',
+              marginTop: '24px',
+              padding: '16px',
+              backgroundColor: '#16A34A',
+              color: 'white',
+              border: 'none',
+              borderRadius: '14px',
+              fontSize: '18px',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+          >
+            Continuar <ChevronRight size={20} aria-hidden="true" />
+          </button>
+        )}
+      </div>
+
+      {resultadoAnaliseLivre?.tipo === 'orientacao' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: 'auto' }}>
+          <button
+            onClick={() => irParaTela('menu')}
+            style={{
+              width: '100%',
+              padding: '16px',
+              backgroundColor: '#ffffff',
+              color: '#374151',
+              border: '1.5px solid #D1D5DB',
+              borderRadius: '14px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer',
+            }}
+          >
+            Voltar para o início
+          </button>
+          <button
+            onClick={() => irParaTela('dicas')}
+            style={{
+              width: '100%',
+              padding: '16px',
+              backgroundColor: '#e8f4e7',
+              color: '#00451f',
+              border: 'none',
+              borderRadius: '14px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            <BookOpen size={20} aria-hidden="true" /> Dicas rápidas de segurança
+          </button>
+          <button
+            onClick={abrirCalma}
+            style={{
+              width: '100%',
+              padding: '16px',
+              backgroundColor: '#eff6ff',
+              color: '#1e40af',
+              border: 'none',
+              borderRadius: '14px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            <Wind size={20} aria-hidden="true" /> Pare e Respire
+          </button>
+        </div>
+      )}
+    </div>
+  )
+
+  // ════════════════════════════════════
   //  RENDER PRINCIPAL
   // ════════════════════════════════════
   return (
@@ -1623,6 +1822,7 @@ const ClarezaDigital = () => {
         {tela === 'link' && <VerificarLink onVoltar={() => irParaTela('menu')} onConcluir={() => irParaTela('menu')} />}
         {tela === 'calma' && <PareERespire onVoltar={voltarDeCalma} />}
         {tela === 'dicas' && renderDicas()}
+        {tela === 'analise-livre' && renderAnaliseLivre()}
       </div>
     </div>
   )
