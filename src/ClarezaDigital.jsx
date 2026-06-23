@@ -299,9 +299,10 @@ const ClarezaDigital = () => {
       className="animate-fadeIn"
       style={{
         backgroundColor: '#F8FAF9',
-        minHeight: '100dvh',
+        height: '100dvh',
         display: 'flex',
         flexDirection: 'column',
+        overflow: 'hidden',
       }}
     >
       {/* ── 1. IDENTIDADE DO SISTEMA (discreta, topo esquerdo) ── */}
@@ -310,13 +311,13 @@ const ClarezaDigital = () => {
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          padding: '20px 20px 0',
+          padding: '16px 20px 0',
         }}
       >
-        <ShieldCheck size={22} style={{ color: '#16A34A' }} aria-hidden="true" />
+        <ShieldCheck size={20} style={{ color: '#16A34A' }} aria-hidden="true" />
         <span
           style={{
-            fontSize: '15px',
+            fontSize: '14px',
             fontWeight: '600',
             color: '#374151',
             letterSpacing: '-0.2px',
@@ -327,14 +328,14 @@ const ClarezaDigital = () => {
       </div>
 
       {/* ── 2. TÍTULO PRINCIPAL ── */}
-      <div style={{ padding: '24px 20px 8px' }}>
+      <div style={{ padding: '16px 20px 4px' }}>
         <h1
           style={{
-            fontSize: '30px',
+            fontSize: '26px',
             fontWeight: '800',
             color: '#00451f',
             lineHeight: '1.15',
-            margin: '0 0 8px',
+            margin: '0 0 4px',
             letterSpacing: '-0.5px',
           }}
         >
@@ -342,24 +343,24 @@ const ClarezaDigital = () => {
         </h1>
         <p
           style={{
-            fontSize: '17px',
+            fontSize: '15px',
             color: '#4B5563',
-            lineHeight: '1.45',
+            lineHeight: '1.4',
             margin: 0,
             fontWeight: '500',
           }}
         >
-          Escolha uma situação ou conte o que aconteceu.
+          Escolha uma situação abaixo.
         </p>
       </div>
 
-      {/* ── 3. FUNCIONALIDADES PRINCIPAIS (3 cartões verticais) ── */}
+      {/* ── 3. FUNCIONALIDADES PRINCIPAIS (cartões verticais) ── */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '12px',
-          padding: '16px 20px',
+          gap: '10px',
+          padding: '10px 20px',
         }}
       >
         {/* Card 1 — Mensagem suspeita */}
@@ -370,15 +371,15 @@ const ClarezaDigital = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '16px',
-            padding: '18px 20px',
+            gap: '14px',
+            padding: '14px 16px',
             backgroundColor: '#ffffff',
             border: '1.5px solid #e5e7eb',
-            borderRadius: '18px',
+            borderRadius: '16px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
             cursor: 'pointer',
             textAlign: 'left',
-            minHeight: '72px',
+            minHeight: '56px',
             transition: 'box-shadow 200ms ease, border-color 200ms ease, transform 150ms ease',
           }}
           onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(74,144,226,0.15)'; e.currentTarget.style.borderColor = '#93bbf0' }}
@@ -386,9 +387,9 @@ const ClarezaDigital = () => {
         >
           <div
             style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: '16px',
+              width: '44px',
+              height: '44px',
+              borderRadius: '14px',
               backgroundColor: '#eff6ff',
               display: 'flex',
               alignItems: 'center',
@@ -396,20 +397,20 @@ const ClarezaDigital = () => {
               flexShrink: 0,
             }}
           >
-            <MessageCircle size={26} style={{ color: '#4a90e2' }} fill="#4a90e2" aria-hidden="true" />
+            <MessageCircle size={22} style={{ color: '#4a90e2' }} fill="#4a90e2" aria-hidden="true" />
           </div>
           <span
             style={{
-              fontSize: '17px',
+              fontSize: '16px',
               fontWeight: '700',
               color: '#111827',
-              lineHeight: '1.35',
+              lineHeight: '1.3',
               flex: 1,
             }}
           >
             Recebeu uma mensagem suspeita?
           </span>
-          <ChevronRight size={20} style={{ color: '#9CA3AF', flexShrink: 0 }} aria-hidden="true" />
+          <ChevronRight size={18} style={{ color: '#9CA3AF', flexShrink: 0 }} aria-hidden="true" />
         </button>
 
         {/* Card 2 — Pedido de PIX */}
@@ -420,15 +421,15 @@ const ClarezaDigital = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '16px',
-            padding: '18px 20px',
+            gap: '14px',
+            padding: '14px 16px',
             backgroundColor: '#ffffff',
             border: '1.5px solid #e5e7eb',
-            borderRadius: '18px',
+            borderRadius: '16px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
             cursor: 'pointer',
             textAlign: 'left',
-            minHeight: '72px',
+            minHeight: '56px',
             transition: 'box-shadow 200ms ease, border-color 200ms ease, transform 150ms ease',
           }}
           onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(34,197,94,0.15)'; e.currentTarget.style.borderColor = '#86efac' }}
@@ -436,9 +437,9 @@ const ClarezaDigital = () => {
         >
           <div
             style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: '16px',
+              width: '44px',
+              height: '44px',
+              borderRadius: '14px',
               backgroundColor: '#dcfce7',
               display: 'flex',
               alignItems: 'center',
@@ -446,20 +447,20 @@ const ClarezaDigital = () => {
               flexShrink: 0,
             }}
           >
-            <DollarSign size={26} style={{ color: '#16a34a' }} aria-hidden="true" />
+            <DollarSign size={22} style={{ color: '#16a34a' }} aria-hidden="true" />
           </div>
           <span
             style={{
-              fontSize: '17px',
+              fontSize: '16px',
               fontWeight: '700',
               color: '#111827',
-              lineHeight: '1.35',
+              lineHeight: '1.3',
               flex: 1,
             }}
           >
             Recebeu um pedido de PIX?
           </span>
-          <ChevronRight size={20} style={{ color: '#9CA3AF', flexShrink: 0 }} aria-hidden="true" />
+          <ChevronRight size={18} style={{ color: '#9CA3AF', flexShrink: 0 }} aria-hidden="true" />
         </button>
 
         {/* Card 3 — Recebi algo para clicar */}
@@ -470,15 +471,15 @@ const ClarezaDigital = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '16px',
-            padding: '18px 20px',
+            gap: '14px',
+            padding: '14px 16px',
             backgroundColor: '#ffffff',
             border: '1.5px solid #e5e7eb',
-            borderRadius: '18px',
+            borderRadius: '16px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
             cursor: 'pointer',
             textAlign: 'left',
-            minHeight: '72px',
+            minHeight: '56px',
             transition: 'box-shadow 200ms ease, border-color 200ms ease, transform 150ms ease',
           }}
           onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(245,157,35,0.15)'; e.currentTarget.style.borderColor = '#fdba74' }}
@@ -486,9 +487,9 @@ const ClarezaDigital = () => {
         >
           <div
             style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: '16px',
+              width: '44px',
+              height: '44px',
+              borderRadius: '14px',
               backgroundColor: '#fff7ed',
               display: 'flex',
               alignItems: 'center',
@@ -496,74 +497,75 @@ const ClarezaDigital = () => {
               flexShrink: 0,
             }}
           >
-            <LinkIcon size={26} style={{ color: '#ea580c' }} aria-hidden="true" />
+            <LinkIcon size={22} style={{ color: '#ea580c' }} aria-hidden="true" />
           </div>
           <span
             style={{
-              fontSize: '17px',
+              fontSize: '16px',
               fontWeight: '700',
               color: '#111827',
-              lineHeight: '1.35',
+              lineHeight: '1.3',
               flex: 1,
             }}
           >
             Recebeu algo para clicar?
           </span>
-          <ChevronRight size={20} style={{ color: '#9CA3AF', flexShrink: 0 }} aria-hidden="true" />
+          <ChevronRight size={18} style={{ color: '#9CA3AF', flexShrink: 0 }} aria-hidden="true" />
         </button>
-      </div>
-
-      {/* ── 4. FUNCIONALIDADE COMPLEMENTAR: Campo de texto livre ── */}
-      <div style={{ padding: '8px 20px 0' }}>
+        {/* Card 4 — Outra situação */}
         <div
           style={{
             backgroundColor: '#ffffff',
             border: '1.5px solid #e5e7eb',
-            borderRadius: '18px',
-            padding: '18px 20px',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+            borderRadius: '16px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+            padding: '14px 16px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <HelpCircle size={18} style={{ color: '#6B7280', flexShrink: 0 }} aria-hidden="true" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '10px' }}>
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '14px',
+                backgroundColor: '#f5f3ff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <HelpCircle size={22} style={{ color: '#7e5ce6' }} aria-hidden="true" />
+            </div>
             <label
               htmlFor="campo-descricao-livre"
               style={{
                 fontSize: '16px',
                 fontWeight: '700',
-                color: '#1C1C1E',
+                color: '#111827',
                 lineHeight: '1.3',
+                flex: 1,
               }}
             >
-              Escreva o que aconteceu
+              Outra situação
             </label>
           </div>
-          <p
-            style={{
-              fontSize: '14px',
-              color: '#6B7280',
-              lineHeight: '1.45',
-              margin: '0 0 12px',
-            }}
-          >
-            Se sua situação não estiver acima, conte para nós o que aconteceu.
-          </p>
           <textarea
             id="campo-descricao-livre"
             value={descricaoLivre}
             onChange={e => setDescricaoLivre(e.target.value)}
-            placeholder="Exemplo: recebi uma ligação estranha pedindo meus dados."
-            rows={3}
+            placeholder="Descreva o que aconteceu..."
+            rows={2}
             style={{
               width: '100%',
-              fontSize: '16px',
+              fontSize: '15px',
               color: '#1C1C1E',
               backgroundColor: '#F9FAFB',
               border: '1.5px solid #D1D5DB',
-              borderRadius: '14px',
-              padding: '14px 16px',
-              resize: 'vertical',
-              lineHeight: '1.5',
+              borderRadius: '12px',
+              padding: '10px 14px',
+              resize: 'none',
+              lineHeight: '1.45',
               outline: 'none',
               transition: 'border-color 200ms ease',
               boxSizing: 'border-box',
@@ -575,7 +577,7 @@ const ClarezaDigital = () => {
       </div>
 
       {/* ── 5. RECURSOS SECUNDÁRIOS: Dicas rápidas ── */}
-      <div style={{ padding: '20px 20px 0', marginTop: 'auto' }}>
+      <div style={{ padding: '12px 20px 16px', marginTop: 'auto' }}>
         <button
           id="btn-dicas-seguranca"
           onClick={() => irParaTela('dicas')}
@@ -584,11 +586,11 @@ const ClarezaDigital = () => {
             width: '100%',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
-            padding: '14px 16px',
+            gap: '10px',
+            padding: '12px 16px',
             backgroundColor: '#e8f4e7',
             border: 'none',
-            borderRadius: '16px',
+            borderRadius: '14px',
             cursor: 'pointer',
             textAlign: 'left',
             transition: 'box-shadow 200ms ease',
@@ -596,11 +598,11 @@ const ClarezaDigital = () => {
           onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,69,31,0.12)'}
           onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
         >
-          <BookOpen size={22} style={{ color: '#00451f', flexShrink: 0 }} aria-hidden="true" />
+          <BookOpen size={20} style={{ color: '#00451f', flexShrink: 0 }} aria-hidden="true" />
           <span
             style={{
               flex: 1,
-              fontSize: '15px',
+              fontSize: '14px',
               fontWeight: '600',
               color: '#00451f',
               lineHeight: '1.3',
@@ -608,12 +610,9 @@ const ClarezaDigital = () => {
           >
             Dicas rápidas de segurança
           </span>
-          <ChevronRight size={20} style={{ color: '#00451f', flexShrink: 0 }} aria-hidden="true" />
+          <ChevronRight size={18} style={{ color: '#00451f', flexShrink: 0 }} aria-hidden="true" />
         </button>
       </div>
-
-      {/* ── 6. RODAPÉ ── */}
-      <Rodape style={{ marginTop: '12px' }} />
     </div>
   )
 
