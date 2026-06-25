@@ -1,36 +1,36 @@
 import { useState } from 'react'
-import { ShieldCheck, X, Play } from 'lucide-react'
+import { ShieldCheck, X, Headphones } from 'lucide-react'
 
 const BoasVindas = ({ onEntrar, isLogin }) => {
-  // Modal de vídeo: abre automaticamente na 1ª visita (sem conta)
+  // Modal abre automaticamente na 1ª visita (sem conta criada ainda)
   const [modalAberto, setModalAberto] = useState(!isLogin)
 
+  const abrirModal  = () => setModalAberto(true)
   const fecharModal = () => setModalAberto(false)
 
   return (
     <div
       className="animate-fadeIn flex flex-col items-center justify-center px-6"
-      style={{
-        height: '100dvh',
-        backgroundColor: '#F0F4F8',
-        position: 'relative',
-      }}
+      style={{ height: '100dvh', backgroundColor: '#F0F4F8', position: 'relative' }}
     >
-      {/* ── Modal de vídeo ── */}
+
+      {/* ════════════════════════════════
+          MODAL DE ÁUDIO
+      ════════════════════════════════ */}
       {modalAberto && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Vídeo explicando como usar o Clareza Digital"
+          aria-label="Áudio explicando como usar o Clareza Digital"
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.65)',
+            backgroundColor: 'rgba(0,0,0,0.60)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 50,
-            padding: '20px',
+            padding: '24px 16px',
           }}
         >
           <div
@@ -43,27 +43,27 @@ const BoasVindas = ({ onEntrar, isLogin }) => {
               boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
             }}
           >
-            {/* Cabeçalho do modal */}
+            {/* ── Cabeçalho ── */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '16px 20px',
+                padding: '18px 20px',
                 borderBottom: '0.5px solid #E5E7EB',
               }}
             >
               <div>
                 <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#1C1C1E', margin: 0 }}>
-                  Como usar o Clareza Digital
+                  Como funciona o Clareza Digital
                 </h2>
-                <p style={{ fontSize: '14px', color: '#4B5563', margin: '2px 0 0' }}>
-                  Veja como o aplicativo pode te ajudar
+                <p style={{ fontSize: '14px', color: '#4B5563', margin: '3px 0 0' }}>
+                  Ouça a apresentação do aplicativo
                 </p>
               </div>
               <button
                 onClick={fecharModal}
-                aria-label="Fechar vídeo e continuar"
+                aria-label="Fechar áudio e continuar"
                 style={{
                   width: '36px',
                   height: '36px',
@@ -81,60 +81,55 @@ const BoasVindas = ({ onEntrar, isLogin }) => {
               </button>
             </div>
 
-            {/* Área do vídeo */}
+            {/* ── Área do áudio ── */}
             <div
               style={{
-                position: 'relative',
-                width: '100%',
-                paddingBottom: '56.25%', /* 16:9 */
-                backgroundColor: '#000',
+                padding: '28px 24px 24px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '20px',
               }}
             >
-              {/*
-                INSTRUÇÃO PARA O DESENVOLVEDOR:
-                Substitua o src abaixo pelo link embed do seu vídeo.
-
-                Para YouTube, use o formato:
-                https://www.youtube.com/embed/SEU_ID_AQUI
-
-                Para vídeo próprio hospedado, use a tag <video> abaixo (descomente).
-              */}
-              <iframe
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="Como usar o Clareza Digital"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              {/* Ícone decorativo */}
+              <div
                 style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  border: 'none',
+                  width: '72px',
+                  height: '72px',
+                  borderRadius: '50%',
+                  backgroundColor: '#DCFCE7',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-              />
+              >
+                <Headphones size={36} color="#16A34A" aria-hidden="true" />
+              </div>
 
-              {/*
-                ALTERNATIVA — vídeo próprio (descomente e preencha o src):
-                <video
-                  controls
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                  aria-label="Vídeo tutorial do Clareza Digital"
-                >
-                  <source src="/seu-video.mp4" type="video/mp4" />
-                  Seu navegador não suporta vídeo.
-                </video>
-              */}
+              <p style={{ fontSize: '15px', color: '#4B5563', textAlign: 'center', lineHeight: '1.55', margin: 0 }}>
+                Toque em <strong style={{ color: '#1C1C1E' }}>▶ Play</strong> para ouvir como o aplicativo funciona e como ele pode te proteger de golpes.
+              </p>
+
+              {/* Player nativo — não inicia automaticamente (sem autoPlay) */}
+              <audio
+                controls
+                preload="metadata"
+                aria-label="Áudio explicando como usar o Clareza Digital"
+                style={{ width: '100%', borderRadius: '10px' }}
+              >
+                <source src="/como-funciona.mp3" type="audio/mpeg" />
+                Seu navegador não suporta o player de áudio.
+              </audio>
             </div>
 
-            {/* Rodapé do modal */}
-            <div style={{ padding: '16px 20px' }}>
+            {/* ── Rodapé do modal ── */}
+            <div style={{ padding: '0 20px 20px' }}>
               <button
                 onClick={fecharModal}
-                aria-label="Fechar vídeo e continuar para o aplicativo"
+                aria-label="Fechar áudio e continuar para o aplicativo"
                 style={{
                   width: '100%',
-                  minHeight: '52px',
+                  minHeight: '54px',
                   backgroundColor: '#16A34A',
                   color: '#FFFFFF',
                   fontWeight: '700',
@@ -151,21 +146,19 @@ const BoasVindas = ({ onEntrar, isLogin }) => {
         </div>
       )}
 
-      {/* ── Conteúdo principal da tela ── */}
+      {/* ════════════════════════════════
+          CONTEÚDO PRINCIPAL DA TELA
+      ════════════════════════════════ */}
 
-      {/* Ícone do Escudo */}
+      {/* Escudo */}
       <div
         className="flex items-center justify-center rounded-full mb-6"
-        style={{
-          width: '100px',
-          height: '100px',
-          backgroundColor: '#DCFCE7',
-        }}
+        style={{ width: '100px', height: '100px', backgroundColor: '#DCFCE7' }}
       >
         <ShieldCheck size={56} style={{ color: '#16A34A' }} aria-hidden="true" />
       </div>
 
-      {/* Nome do Aplicativo */}
+      {/* Nome */}
       <h1
         className="font-bold text-center"
         style={{ fontSize: '32px', color: '#1C1C1E', lineHeight: '1.2' }}
@@ -181,10 +174,10 @@ const BoasVindas = ({ onEntrar, isLogin }) => {
         Seu assistente de segurança digital.
       </p>
 
-      {/* Botão "Ver como funciona" — sempre visível */}
+      {/* Botão "Ver como funciona" */}
       <button
-        onClick={() => setModalAberto(true)}
-        aria-label="Ver vídeo explicando como funciona o aplicativo"
+        onClick={abrirModal}
+        aria-label="Ouvir áudio explicando como funciona o aplicativo"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -201,11 +194,11 @@ const BoasVindas = ({ onEntrar, isLogin }) => {
           minHeight: '44px',
         }}
       >
-        <Play size={16} aria-hidden="true" />
+        <Headphones size={16} aria-hidden="true" />
         Ver como funciona
       </button>
 
-      {/* Botão Principal */}
+      {/* Botão principal */}
       <button
         onClick={onEntrar}
         aria-label={isLogin ? 'Entrar no aplicativo' : 'Criar sua conta no aplicativo'}
@@ -219,6 +212,7 @@ const BoasVindas = ({ onEntrar, isLogin }) => {
       >
         {isLogin ? 'Entrar' : 'Criar conta'}
       </button>
+
     </div>
   )
 }
