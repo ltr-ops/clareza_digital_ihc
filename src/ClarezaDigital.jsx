@@ -26,7 +26,6 @@ import {
 } from 'lucide-react'
 
 import VerificarLink from './VerificarLink'
-import PareERespire from './PareERespire'
 import BoasVindas from './BoasVindas'
 import Cadastro from './Cadastro'
 
@@ -57,6 +56,7 @@ const ClarezaDigital = () => {
   const [dicasConcluido, setDicasConcluido] = useState(false)
   const [descricaoLivre, setDescricaoLivre] = useState('')
   const [resultadoAnaliseLivre, setResultadoAnaliseLivre] = useState(null)
+  const [linkAutoAnalisarTexto, setLinkAutoAnalisarTexto] = useState('')
 
   // ── Verificar se o usuário já criou conta (localStorage) ──
   useEffect(() => {
@@ -104,6 +104,7 @@ const ClarezaDigital = () => {
     if (nomeTela === 'menu') {
       setDescricaoLivre('')
       setResultadoAnaliseLivre(null)
+      setLinkAutoAnalisarTexto('')
     }
     if (nomeTela === 'dicas') {
       setDicaAtual(0)
@@ -118,141 +119,215 @@ const ClarezaDigital = () => {
 
     const texto = descricaoLivre.toLowerCase()
 
-    // Cenário 1: Mensagem Suspeita
+    // ── Cenário A: Mensagem suspeita — analisa diretamente sem redirecionar ──
     const palavrasMensagem = ['mensagem', 'whatsapp', 'sms', 'email', 'e-mail', 'conversa', 'texto', 'telegram', 'instagram', 'facebook', 'estranha']
     if (palavrasMensagem.some(p => texto.includes(p))) {
+      const res = calcularResultadoMensagem(descricaoLivre)
       setResultadoAnaliseLivre({
-        tipo: 'redirecionamento',
-        destino: 'mensagem',
-        mensagem: 'Parece que sua situação está relacionada a uma mensagem suspeita. Vamos analisar melhor.'
+        tipo: 'mensagem',
+        nivel: res.nivel,
+        sinais: res.sinais,
+        textoOriginal: descricaoLivre,
       })
       irParaTela('analise-livre')
       return
     }
 
-    // Cenário 1: Pedido de PIX
-    const palavrasPix = ['pix', 'pagamento', 'dinheiro', 'transferência', 'depósito', 'valor', 'cobrança', 'pagar', 'urgente']
+    // ── Cenário B: PIX suspeito — analisa diretamente sem redirecionar ──
+    const palavrasPix = ['pix', 'pagamento', 'dinheiro', 'transferência', 'depósito', 'valor', 'cobrança', 'pagar']
     if (palavrasPix.some(p => texto.includes(p))) {
+      const temPressa = ['urgente', 'agora', 'rápido', 'bloque', 'já', 'imediato', 'socorr'].some(p => texto.includes(p))
+      const naoConhece = ['desconhecido', 'não conheço', 'estranh', 'número novo', 'número diferente'].some(p => texto.includes(p))
+      let nivelPix = 'atencao'
+      if (temPressa && naoConhece) nivelPix = 'alto'
+      else if (temPressa || naoConhece) nivelPix = 'atencao'
       setResultadoAnaliseLivre({
-        tipo: 'redirecionamento',
-        destino: 'pix',
-        mensagem: 'Parece que sua situação envolve um pedido de PIX ou transferência.'
+        tipo: 'pix',
+        nivel: nivelPix,
+        temPressa,
       })
       irParaTela('analise-livre')
       return
     }
 
-    // Cenário 1: Recebi algo para clicar
-    const palavrasLink = ['link', 'site', 'clique', 'clicar', 'endereço', 'url', 'página', 'atualização', 'cadastro', 'acessar']
+    // ── Cenário C: Link suspeito — analisa diretamente sem redirecionar ──
+    const palavrasLink = ['link', 'site', 'clique', 'clicar', 'endereço', 'url', 'página', 'atualização', 'acessar']
     if (palavrasLink.some(p => texto.includes(p))) {
+      const altissmoRisco = ['bit.ly', 'tinyurl', 'senha', 'codigo', 'cpf', 'confirme', 'bloqueado', 'urgente', 'ganhou', 'premio', 'banco-', 'bradesco-', 'itau-']
+      const medioRisco = ['gratis', 'free', 'clique', 'acesse', 'cadastro', 'oferta', 'desconto', 'verificar']
+      const achouAlto = altissmoRisco.filter(p => texto.includes(p))
+      const achouMedio = medioRisco.filter(p => texto.includes(p))
       setResultadoAnaliseLivre({
-        tipo: 'redirecionamento',
-        destino: 'link',
-        mensagem: 'Parece que você recebeu algo para clicar.'
+        tipo: 'link',
+        nivel: achouAlto.length > 0 ? 'alto' : achouMedio.length > 0 ? 'medio' : 'seguro',
+        palavras: achouAlto.length > 0 ? achouAlto : achouMedio,
       })
       irParaTela('analise-livre')
       return
     }
 
-    // Cenário 2: Situação Não Relacionada
-    let resposta = "Não conseguimos identificar exatamente a situação.\n\nPor segurança:\n\n• Não compartilhe senhas.\n• Não envie dinheiro.\n• Não forneça documentos pessoais.\n• Procure ajuda de uma pessoa de confiança se continuar com dúvidas."
+    // ── Cenário D: Situação não classificada — orientações por tipo ──
+    let orientacao = {
+      icone: 'geral',
+      titulo: 'Entendemos sua dúvida',
+      subtitulo: 'Mesmo sem identificar o tipo exato, aqui estão orientações importantes:',
+      passos: [
+        { texto: 'Não compartilhe senhas com ninguém, por nenhum motivo.' },
+        { texto: 'Não envie dinheiro sem confirmar pessoalmente com a pessoa.' },
+        { texto: 'Não forneça documentos ou fotos do seu cartão.' },
+        { texto: 'Quando em dúvida, desligue e ligue de volta pelo número que você já tem.' },
+      ],
+      alerta: 'Procure ajuda de uma pessoa de confiança antes de tomar qualquer decisão.',
+    }
 
-    if (texto.includes('ligação') || texto.includes('bloqueada') || texto.includes('telefonema') || texto.includes('telefone')) {
-      resposta = "Essa situação pode estar relacionada a uma tentativa de golpe por ligação telefônica.\n\nNão forneça senhas ou dados pessoais.\n\nEntre em contato diretamente com a instituição citada para confirmar a informação."
-    } else if (texto.includes('prêmio') || texto.includes('ganhei') || texto.includes('sorteio')) {
-      resposta = "Desconfie de prêmios inesperados.\n\nEvite compartilhar dados pessoais antes de confirmar a origem da informação."
-    } else if (texto.includes('cpf') || texto.includes('rg') || texto.includes('documento') || texto.includes('dados pessoais')) {
-      resposta = "Tenha cuidado ao compartilhar documentos e dados pessoais.\n\nSempre confirme quem está solicitando essas informações."
+    if (texto.includes('ligação') || texto.includes('telefonou') || texto.includes('telefonema') || texto.includes('ligou') || texto.includes('ligan')) {
+      orientacao = {
+        icone: 'ligacao',
+        titulo: 'Golpe por ligação telefônica',
+        subtitulo: 'Esse é um dos golpes mais comuns. Veja o que fazer:',
+        passos: [
+          { texto: 'Desligue imediatamente se pedirem senha, código ou dinheiro.' },
+          { texto: 'Nunca forneça código que chegou no seu celular por SMS.' },
+          { texto: 'Ligue de volta pelo número oficial do banco (atrás do cartão).' },
+          { texto: 'Bancos reais nunca pedem sua senha por telefone.' },
+        ],
+        alerta: 'Se já forneceu informações, entre em contato com o banco imediatamente.',
+      }
+    } else if (texto.includes('familiar') || texto.includes('filho') || texto.includes('filha') || texto.includes('mãe') || texto.includes('pai') || texto.includes('neto') || texto.includes('neta') || texto.includes('irmão') || texto.includes('irmã') || texto.includes('parente') || texto.includes('se passando')) {
+      orientacao = {
+        icone: 'familiar',
+        titulo: 'Alguém se passando por familiar',
+        subtitulo: 'Esse golpe é muito comum. Veja como se proteger:',
+        passos: [
+          { texto: 'Não envie dinheiro antes de ligar para o familiar pelo número antigo que você já tem salvo.' },
+          { texto: 'Faça uma pergunta que só o familiar verdadeiro saberia responder.' },
+          { texto: 'Desconfie se pedirem sigilo ou urgência.' },
+          { texto: 'O número pode ser falso mesmo que pareça real.' },
+        ],
+        alerta: 'Na dúvida, espere. Nenhuma emergência real exige que você pague antes de confirmar.',
+      }
+    } else if (texto.includes('código') || texto.includes('confirmar') || texto.includes('confirmação') || texto.includes('código de verificação') || texto.includes('token')) {
+      orientacao = {
+        icone: 'codigo',
+        titulo: 'Pedido de código de confirmação',
+        subtitulo: 'Nunca compartilhe códigos. Veja o porquê:',
+        passos: [
+          { texto: 'Códigos enviados por SMS ou aplicativo são pessoais e secretos.' },
+          { texto: 'Nenhuma empresa, banco ou familiar precisa do seu código.' },
+          { texto: 'Quem pede código quer acessar sua conta sem você perceber.' },
+          { texto: 'Se já enviou um código, troque sua senha imediatamente.' },
+        ],
+        alerta: 'Se já compartilhou um código, entre em contato com o banco ou serviço agora mesmo.',
+      }
+    } else if (texto.includes('acesso remoto') || texto.includes('teamviewer') || texto.includes('anydesk') || texto.includes('controle') || texto.includes('compartilh') || texto.includes('tela') || texto.includes('instalou') || texto.includes('instalar')) {
+      orientacao = {
+        icone: 'remoto',
+        titulo: 'Tentativa de acesso remoto',
+        subtitulo: 'Isso é muito perigoso. Aja agora:',
+        passos: [
+          { texto: 'Desligue o Wi-Fi ou os dados do celular agora.' },
+          { texto: 'Desinstale qualquer aplicativo que tenha instalado por pedido de estranhos.' },
+          { texto: 'Troque as senhas de todos os aplicativos financeiros.' },
+          { texto: 'Avise seu banco imediatamente.' },
+        ],
+        alerta: 'Se alguém ainda tiver acesso ao seu celular, desligue o aparelho agora e procure ajuda presencial.',
+      }
+    } else if (texto.includes('prêmio') || texto.includes('ganhei') || texto.includes('sorteio') || texto.includes('contemplad') || texto.includes('ganhou') || texto.includes('parabéns') || texto.includes('selecionad')) {
+      orientacao = {
+        icone: 'premio',
+        titulo: 'Golpe do prêmio ou sorteio falso',
+        subtitulo: 'Se você não participou de nada, desconfie muito:',
+        passos: [
+          { texto: 'Ninguém ganha prêmio de sorteio que não participou.' },
+          { texto: 'Não pague nenhuma taxa para receber um prêmio — isso é golpe.' },
+          { texto: 'Não forneça dados pessoais ou bancários.' },
+          { texto: 'Ignore e apague a mensagem.' },
+        ],
+        alerta: 'Prêmios que pedem pagamento antecipado são sempre golpe, sem exceção.',
+      }
     }
 
     setResultadoAnaliseLivre({
       tipo: 'orientacao',
-      mensagem: resposta
+      orientacao,
     })
     irParaTela('analise-livre')
   }
 
-  const abrirCalma = useCallback(() => {
-    setTelaAnterior(tela)
-    setAnimKey(prev => prev + 1)
-    setTela('calma')
-  }, [tela])
+  const calcularResultadoMensagem = (texto) => {
+    const textoLower = texto.toLowerCase()
+    const palavrasAltoRisco = [
+      'urgente', 'bloqueado', 'sua conta', 'clique aqui', 'acesse',
+      'confirme seus dados', 'promoção', 'ganhou', 'prêmio', 'banco',
+      'cpf', 'senha', 'código', 'pix liberado', 'transferência',
+      'suspiro', 'atualizar cadastro', 'dados bancários', 'cartão',
+      'desbloqueio', 'liberação'
+    ]
+    const palavrasMedioRisco = [
+      'link', 'cadastro', 'verifique', 'atenção', 'acesso',
+      'atualize', 'clique', 'baixe'
+    ]
 
-  const voltarDeCalma = useCallback(() => {
-    setAnimKey(prev => prev + 1)
-    setTela(telaAnterior || 'menu')
-  }, [telaAnterior])
+    const sinaisAlto = palavrasAltoRisco.filter(p => textoLower.includes(p))
+    const sinaisMedio = palavrasMedioRisco.filter(p => textoLower.includes(p))
+
+    if (sinaisAlto.length > 0) {
+      return {
+        nivel: 'alto',
+        sinais: sinaisAlto.map(s => {
+          const mapa = {
+            'urgente': 'Usa a palavra "urgente" para te pressionar',
+            'bloqueado': 'Diz que algo está bloqueado para causar medo',
+            'sua conta': 'Menciona "sua conta" para parecer real',
+            'clique aqui': 'Pede para você clicar em algo',
+            'acesse': 'Pede para você acessar um endereço',
+            'confirme seus dados': 'Pede para confirmar dados pessoais',
+            'promoção': 'Usa promoção para te atrair',
+            'ganhou': 'Diz que você ganhou algo (provavelmente falso)',
+            'prêmio': 'Fala sobre prêmio (golpe muito comum)',
+            'banco': 'Menciona banco (bancos reais não mandam esse tipo de mensagem)',
+            'cpf': 'Pede número de documento',
+            'senha': 'Pede sua senha (NUNCA compartilhe!)',
+            'código': 'Pede um código (golpistas usam isso)',
+            'pix liberado': 'Fala sobre PIX liberado (golpe comum)',
+            'transferência': 'Menciona transferência de dinheiro',
+            'suspiro': 'Contém padrão suspeito',
+            'atualizar cadastro': 'Pede para atualizar cadastro',
+            'dados bancários': 'Pede dados bancários',
+            'cartão': 'Menciona cartão (cuidado!)',
+            'desbloqueio': 'Fala sobre desbloquear algo',
+            'liberação': 'Fala sobre liberação'
+          }
+          return mapa[s] || `Contém a palavra suspeita "${s}"`
+        })
+      }
+    } else if (sinaisMedio.length > 0) {
+      return {
+        nivel: 'medio',
+        sinais: sinaisMedio.map(s => {
+          const mapa = {
+            'link': 'Contém um endereço para clicar',
+            'cadastro': 'Fala sobre cadastro',
+            'verifique': 'Pede para verificar algo',
+            'atenção': 'Tenta chamar sua atenção',
+            'acesso': 'Menciona acesso a algo',
+            'atualize': 'Pede para atualizar algo',
+            'clique': 'Pede para clicar em algo',
+            'baixe': 'Pede para baixar algo'
+          }
+          return mapa[s] || `Contém "${s}"`
+        })
+      }
+    } else {
+      return { nivel: 'seguro', sinais: [] }
+    }
+  }
 
   // ── Lógica de análise de mensagem ──
   const analisarMensagem = useCallback(() => {
     setAnalisando(true)
     setTimeout(() => {
-      const textoLower = mensagem.toLowerCase()
-      const palavrasAltoRisco = [
-        'urgente', 'bloqueado', 'sua conta', 'clique aqui', 'acesse',
-        'confirme seus dados', 'promoção', 'ganhou', 'prêmio', 'banco',
-        'cpf', 'senha', 'código', 'pix liberado', 'transferência',
-        'suspiro', 'atualizar cadastro', 'dados bancários', 'cartão',
-        'desbloqueio', 'liberação'
-      ]
-      const palavrasMedioRisco = [
-        'link', 'cadastro', 'verifique', 'atenção', 'acesso',
-        'atualize', 'clique', 'baixe'
-      ]
-
-      const sinaisAlto = palavrasAltoRisco.filter(p => textoLower.includes(p))
-      const sinaisMedio = palavrasMedioRisco.filter(p => textoLower.includes(p))
-
-      if (sinaisAlto.length > 0) {
-        setResultado({
-          nivel: 'alto',
-          sinais: sinaisAlto.map(s => {
-            const mapa = {
-              'urgente': 'Usa a palavra "urgente" para te pressionar',
-              'bloqueado': 'Diz que algo está bloqueado para causar medo',
-              'sua conta': 'Menciona "sua conta" para parecer real',
-              'clique aqui': 'Pede para você clicar em algo',
-              'acesse': 'Pede para você acessar um endereço',
-              'confirme seus dados': 'Pede para confirmar dados pessoais',
-              'promoção': 'Usa promoção para te atrair',
-              'ganhou': 'Diz que você ganhou algo (provavelmente falso)',
-              'prêmio': 'Fala sobre prêmio (golpe muito comum)',
-              'banco': 'Menciona banco (bancos reais não mandam esse tipo de mensagem)',
-              'cpf': 'Pede número de documento',
-              'senha': 'Pede sua senha (NUNCA compartilhe!)',
-              'código': 'Pede um código (golpistas usam isso)',
-              'pix liberado': 'Fala sobre PIX liberado (golpe comum)',
-              'transferência': 'Menciona transferência de dinheiro',
-              'suspiro': 'Contém padrão suspeito',
-              'atualizar cadastro': 'Pede para atualizar cadastro',
-              'dados bancários': 'Pede dados bancários',
-              'cartão': 'Menciona cartão (cuidado!)',
-              'desbloqueio': 'Fala sobre desbloquear algo',
-              'liberação': 'Fala sobre liberação'
-            }
-            return mapa[s] || `Contém a palavra suspeita "${s}"`
-          })
-        })
-      } else if (sinaisMedio.length > 0) {
-        setResultado({
-          nivel: 'medio',
-          sinais: sinaisMedio.map(s => {
-            const mapa = {
-              'link': 'Contém um endereço para clicar',
-              'cadastro': 'Fala sobre cadastro',
-              'verifique': 'Pede para verificar algo',
-              'atenção': 'Tenta chamar sua atenção',
-              'acesso': 'Menciona acesso a algo',
-              'atualize': 'Pede para atualizar algo',
-              'clique': 'Pede para clicar em algo',
-              'baixe': 'Pede para baixar algo'
-            }
-            return mapa[s] || `Contém "${s}"`
-          })
-        })
-      } else {
-        setResultado({ nivel: 'seguro', sinais: [] })
-      }
+      setResultado(calcularResultadoMensagem(mensagem))
       setAnalisando(false)
     }, 1500)
   }, [mensagem])
@@ -281,20 +356,7 @@ const ClarezaDigital = () => {
   //  COMPONENTES AUXILIARES
   // ════════════════════════════════════
 
-  // Botão Calma (fixo no topo direito)
-  const BotaoCalma = () => (
-    <button
-      onClick={abrirCalma}
-      aria-label="Pare alguns segundos antes de tomar qualquer decisão"
-      className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-white font-bold shadow-lg hover:shadow-xl transition-all"
-      style={{ backgroundColor: '#D97706', fontSize: '15px', minHeight: '44px' }}
-    >
-      <Wind size={20} aria-hidden="true" />
-      <span>PARE E RESPIRE</span>
-    </button>
-  )
-
-  // Cabeçalho com botão voltar e calma
+  // Cabeçalho com botão voltar
   const Cabecalho = ({ onVoltar }) => (
     <div className="flex items-center justify-between mb-6">
       <button
@@ -306,7 +368,6 @@ const ClarezaDigital = () => {
         <ArrowLeft size={20} aria-hidden="true" />
         <span>Voltar</span>
       </button>
-      <BotaoCalma />
     </div>
   )
 
@@ -1448,7 +1509,6 @@ const ClarezaDigital = () => {
               <ArrowLeft size={20} aria-hidden="true" />
               <span>Voltar</span>
             </button>
-            <BotaoCalma />
           </div>
 
           {/* Conteúdo centralizado */}
@@ -1567,7 +1627,6 @@ const ClarezaDigital = () => {
             <ArrowLeft size={20} aria-hidden="true" />
             <span>Voltar</span>
           </button>
-          <BotaoCalma />
         </div>
 
         {/* ── Indicador de progresso ── */}
@@ -1687,116 +1746,228 @@ const ClarezaDigital = () => {
   }
 
   // ════════════════════════════════════
-  //  TELA 6 — ANÁLISE DE SITUAÇÃO LIVRE
+  //  TELA 6 — ANÁLISE DE SITUAÇÃO LIVRE (redesign completo)
   // ════════════════════════════════════
-  const renderAnaliseLivre = () => (
-    <div className="animate-fadeIn" style={{ backgroundColor: '#F8FAF9', minHeight: '100dvh', padding: '24px 20px', display: 'flex', flexDirection: 'column' }}>
-      <div className="flex items-center gap-3 mb-6">
-        <button
-          onClick={() => irParaTela('menu')}
-          className="flex items-center justify-center rounded-full bg-white border border-gray-200"
-          style={{ width: '40px', height: '40px' }}
-          aria-label="Voltar para o menu"
-        >
-          <ArrowLeft size={20} className="text-gray-600" aria-hidden="true" />
-        </button>
-        <span className="font-semibold text-gray-800" style={{ fontSize: '18px' }}>
-          Análise da Situação
-        </span>
-      </div>
+  const renderAnaliseLivre = () => {
+    const r = resultadoAnaliseLivre
+    if (!r) return null
 
-      <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', marginBottom: '24px' }}>
-        <p style={{ fontSize: '18px', color: '#1C1C1E', lineHeight: '1.6', fontWeight: '500', whiteSpace: 'pre-wrap' }}>
-          {resultadoAnaliseLivre?.mensagem}
-        </p>
+    // ── Sub-render: resultado de mensagem suspeita ──
+    if (r.tipo === 'mensagem') {
+      const isRisco = r.nivel === 'alto' || r.nivel === 'medio'
+      return (
+        <div className="animate-fadeIn" style={{ backgroundColor: '#F0F4F8', minHeight: '100dvh' }}>
+          <Cabecalho onVoltar={() => irParaTela('menu')} />
 
-        {resultadoAnaliseLivre?.tipo === 'redirecionamento' && (
-          <button
-            onClick={() => irParaTela(resultadoAnaliseLivre.destino)}
+          <div
+            className="rounded-2xl p-6 mb-6"
             style={{
-              width: '100%',
-              marginTop: '24px',
-              padding: '16px',
-              backgroundColor: '#16A34A',
-              color: 'white',
-              border: 'none',
-              borderRadius: '14px',
-              fontSize: '18px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
+              backgroundColor: isRisco ? '#FFFBEB' : '#ECFDF5',
+              border: `2px solid ${isRisco ? '#FDE68A' : '#BBF7D0'}`
             }}
           >
-            Continuar <ChevronRight size={20} aria-hidden="true" />
-          </button>
-        )}
-      </div>
+            <div className="flex items-center gap-3 mb-4">
+              {isRisco
+                ? <AlertTriangle size={40} className="text-[#D97706] shrink-0" aria-hidden="true" />
+                : <ShieldCheck size={40} className="text-[#1D6F42] shrink-0" aria-hidden="true" />
+              }
+              <h2 className="font-bold" style={{ fontSize: '22px', color: isRisco ? '#92400E' : '#1D6F42', lineHeight: '1.3' }}>
+                {r.nivel === 'alto' ? 'Cuidado! Mensagem suspeita.' : r.nivel === 'medio' ? 'Essa mensagem merece atenção.' : 'Parece uma mensagem normal.'}
+              </h2>
+            </div>
+            {isRisco && r.sinais && r.sinais.length > 0 && (
+              <>
+                <p className="font-semibold mb-3" style={{ fontSize: '16px', color: '#374151' }}>Sinais encontrados:</p>
+                <ul className="flex flex-col gap-2 mb-4">
+                  {r.sinais.map((sinal, idx) => (
+                    <li key={idx} className="flex items-start gap-2 p-3 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}>
+                      <AlertTriangle size={18} className="text-[#D97706] shrink-0 mt-0.5" aria-hidden="true" />
+                      <span style={{ fontSize: '15px', color: '#374151', lineHeight: '1.5' }}>{sinal}</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <p className="font-semibold" style={{ fontSize: '16px', color: isRisco ? '#92400E' : '#374151', lineHeight: '1.6' }}>
+              {r.nivel === 'alto' ? 'Não responda. Não clique em nada. Mostre para um familiar.' : r.nivel === 'medio' ? 'Tenha cuidado. Não clique em endereços desconhecidos.' : 'Mas sempre desconfie de pedidos de dinheiro ou dados pessoais.'}
+            </p>
+          </div>
 
-      {resultadoAnaliseLivre?.tipo === 'orientacao' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: 'auto' }}>
-          <button
-            onClick={() => irParaTela('menu')}
-            style={{
-              width: '100%',
-              padding: '16px',
-              backgroundColor: '#ffffff',
-              color: '#374151',
-              border: '1.5px solid #D1D5DB',
-              borderRadius: '14px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-            }}
-          >
-            Voltar para o início
+          <div className="flex flex-col gap-3">
+            <button onClick={() => irParaTela('menu')} className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white"
+              style={{ backgroundColor: isRisco ? '#D97706' : '#1D6F42', fontSize: '18px', minHeight: '56px' }}>
+              <CheckCircle size={22} aria-hidden="true" />
+              {isRisco ? 'Entendi, não vou responder' : 'Ok, entendi'}
+            </button>
+            <button onClick={() => irParaTela('menu')} className="w-full flex items-center justify-center gap-1 p-3 rounded-2xl font-semibold"
+              style={{ color: '#1A4A8A', fontSize: '16px', minHeight: '48px' }}>
+              <ArrowLeft size={18} aria-hidden="true" /> Início
+            </button>
+          </div>
+          <MensagemFinal />
+          <Rodape />
+        </div>
+      )
+    }
+
+    // ── Sub-render: resultado de PIX ──
+    if (r.tipo === 'pix') {
+      const isAlto = r.nivel === 'alto'
+      return (
+        <div className="animate-fadeIn" style={{ backgroundColor: '#F0F4F8', minHeight: '100dvh' }}>
+          <Cabecalho onVoltar={() => irParaTela('menu')} />
+          <div className="rounded-2xl p-6 mb-6"
+            style={{ backgroundColor: isAlto ? '#FEF3C7' : '#FFFBEB', border: `2px solid ${isAlto ? '#F59E0B' : '#FDE68A'}` }}>
+            <div className="flex justify-center mb-4">
+              {isAlto
+                ? <XCircle size={64} className="text-[#DC2626]" aria-hidden="true" />
+                : <AlertTriangle size={64} className="text-[#D97706]" aria-hidden="true" />
+              }
+            </div>
+            <h2 className="font-bold text-center mb-3" style={{ fontSize: isAlto ? '26px' : '24px', color: isAlto ? '#991B1B' : '#92400E', lineHeight: '1.3' }}>
+              {isAlto ? 'PARE! Isso parece golpe.' : 'Atenção! Pode ser golpe de PIX.'}
+            </h2>
+            <p style={{ fontSize: '16px', color: '#374151', lineHeight: '1.6', textAlign: 'center' }}>
+              {isAlto
+                ? 'Não pague de jeito nenhum. Desligue. Ligue para alguém de confiança agora.'
+                : 'Não pague agora. Ligue para a pessoa pelo número que você já tem salvo no celular. Nunca use o número que veio na mensagem.'}
+            </p>
+            {r.temPressa && (
+              <div className="mt-4 p-3 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}>
+                <p style={{ fontSize: '15px', color: '#92400E' }}>⚠ Detectamos urgência no relato — isso é sinal de golpe. Golpistas criam pressa para você não pensar.</p>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-3">
+            <button onClick={() => irParaTela('menu')} className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white"
+              style={{ backgroundColor: isAlto ? '#991B1B' : '#D97706', fontSize: '18px', minHeight: '56px' }}>
+              <X size={22} aria-hidden="true" /> Não vou pagar. Vou pedir ajuda.
+            </button>
+            <a href="tel:00000000000" className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white"
+              style={{ backgroundColor: '#2563EB', fontSize: '18px', minHeight: '56px', textDecoration: 'none' }}>
+              <Phone size={22} aria-hidden="true" /> Falar com familiar
+            </a>
+          </div>
+          <MensagemFinal />
+          <Rodape />
+        </div>
+      )
+    }
+
+    // ── Sub-render: resultado de link ──
+    if (r.tipo === 'link') {
+      const isAlto = r.nivel === 'alto'
+      const isMedio = r.nivel === 'medio'
+      return (
+        <div className="animate-fadeIn" style={{ backgroundColor: '#F0F4F8', minHeight: '100dvh' }}>
+          <Cabecalho onVoltar={() => irParaTela('menu')} />
+          <div className="rounded-2xl p-6 mb-6"
+            style={{ backgroundColor: isAlto ? '#FEF2F2' : isMedio ? '#FFFBEB' : '#F0FDF4', border: `2px solid ${isAlto ? '#FECACA' : isMedio ? '#FDE68A' : '#BBF7D0'}` }}>
+            <div className="flex justify-center mb-4">
+              {isAlto ? <XCircle size={64} className="text-[#DC2626]" aria-hidden="true" />
+                : isMedio ? <AlertTriangle size={64} className="text-[#D97706]" aria-hidden="true" />
+                : <ShieldCheck size={64} className="text-[#16A34A]" aria-hidden="true" />}
+            </div>
+            <h2 className="font-bold text-center mb-3" style={{ fontSize: '24px', color: isAlto ? '#991B1B' : isMedio ? '#92400E' : '#166534', lineHeight: '1.3' }}>
+              {isAlto ? 'Não clique nesse link!' : isMedio ? 'Atenção — tome cuidado' : 'Não encontramos sinais óbvios'}
+            </h2>
+            <p style={{ fontSize: '16px', color: '#374151', lineHeight: '1.6', textAlign: 'center' }}>
+              {isAlto ? 'Esse endereço tem características muito usadas em golpes. Apague a mensagem.'
+                : isMedio ? 'Encontramos características suspeitas. Não clique por enquanto.'
+                : 'Mas lembre-se: nunca clique em links para digitar sua senha ou dados bancários.'}
+            </p>
+          </div>
+          <div className="flex flex-col gap-3">
+            <button onClick={() => irParaTela('menu')} className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white"
+              style={{ backgroundColor: isAlto ? '#991B1B' : isMedio ? '#D97706' : '#1D6F42', fontSize: '18px', minHeight: '56px' }}>
+              <CheckCircle size={22} aria-hidden="true" />
+              {isAlto || isMedio ? 'Entendi, não vou clicar' : 'Entendido'}
+            </button>
+            <button onClick={() => irParaTela('menu')} className="w-full flex items-center justify-center gap-1 p-3 rounded-2xl font-semibold"
+              style={{ color: '#1A4A8A', fontSize: '16px', minHeight: '48px' }}>
+              <ArrowLeft size={18} aria-hidden="true" /> Início
+            </button>
+          </div>
+          <MensagemFinal />
+          <Rodape />
+        </div>
+      )
+    }
+
+    // ── Sub-render: orientação livre (situação não classificada) ──
+    const ori = r.orientacao
+    if (!ori) return null
+
+    const iconeOrientacao = {
+      ligacao: { emoji: '📞', bg: '#EFF6FF', cor: '#1A4A8A' },
+      familiar: { emoji: '👨‍👩‍👧', bg: '#ECFDF5', cor: '#1D6F42' },
+      codigo: { emoji: '🔐', bg: '#FEF3C7', cor: '#D97706' },
+      remoto: { emoji: '⚠️', bg: '#FEF2F2', cor: '#DC2626' },
+      premio: { emoji: '🎁', bg: '#FEF3C7', cor: '#D97706' },
+      geral: { emoji: '🛡️', bg: '#F5F3FF', cor: '#7e5ce6' },
+    }
+    const iconeConfig = iconeOrientacao[ori.icone] || iconeOrientacao.geral
+
+    return (
+      <div className="animate-fadeIn" style={{ backgroundColor: '#F0F4F8', minHeight: '100dvh' }}>
+        <Cabecalho onVoltar={() => irParaTela('menu')} />
+
+        {/* Ícone e título */}
+        <div className="flex flex-col items-center text-center mb-6">
+          <div className="flex items-center justify-center rounded-full mb-4"
+            style={{ width: '72px', height: '72px', backgroundColor: iconeConfig.bg, fontSize: '36px' }}>
+            {ori.icone !== 'geral' ? ori.icone === 'ligacao' ? <Phone size={36} style={{ color: iconeConfig.cor }} aria-hidden="true" />
+              : ori.icone === 'remoto' ? <AlertTriangle size={36} style={{ color: iconeConfig.cor }} aria-hidden="true" />
+              : <ShieldCheck size={36} style={{ color: iconeConfig.cor }} aria-hidden="true" />
+            : <ShieldCheck size={36} style={{ color: iconeConfig.cor }} aria-hidden="true" />}
+          </div>
+          <h2 className="font-bold" style={{ fontSize: '22px', color: '#1C1C1E', lineHeight: '1.3' }}>
+            {ori.titulo}
+          </h2>
+          <p style={{ fontSize: '16px', color: '#4B5563', lineHeight: '1.6', marginTop: '6px' }}>
+            {ori.subtitulo}
+          </p>
+        </div>
+
+        {/* Passos */}
+        <div className="flex flex-col gap-3 mb-4">
+          {ori.passos.map((passo, idx) => (
+            <div key={idx} className="flex items-start gap-3 p-4 rounded-2xl bg-white"
+              style={{ border: '1px solid #E5E7EB' }}>
+              <div className="flex items-center justify-center rounded-full font-bold shrink-0"
+                style={{ width: '28px', height: '28px', backgroundColor: iconeConfig.bg, color: iconeConfig.cor, fontSize: '14px' }}>
+                {idx + 1}
+              </div>
+              <p style={{ fontSize: '16px', color: '#1C1C1E', lineHeight: '1.6' }}>{passo.texto}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Card de alerta final */}
+        <div className="flex items-start gap-3 p-4 rounded-2xl mb-6"
+          style={{ backgroundColor: '#FFFBEB', border: '1px solid #FCD34D' }}>
+          <Lightbulb size={20} style={{ color: '#D97706', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+          <p style={{ fontSize: '15px', color: '#92400E', lineHeight: '1.6' }}>{ori.alerta}</p>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <button onClick={() => irParaTela('menu')}
+            className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl font-bold text-white"
+            style={{ backgroundColor: '#1A4A8A', fontSize: '18px', minHeight: '56px' }}>
+            <CheckCircle size={22} aria-hidden="true" /> Entendi, estou mais segura
           </button>
-          <button
-            onClick={() => irParaTela('dicas')}
-            style={{
-              width: '100%',
-              padding: '16px',
-              backgroundColor: '#e8f4e7',
-              color: '#00451f',
-              border: 'none',
-              borderRadius: '14px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            <BookOpen size={20} aria-hidden="true" /> Dicas rápidas de segurança
-          </button>
-          <button
-            onClick={abrirCalma}
-            style={{
-              width: '100%',
-              padding: '16px',
-              backgroundColor: '#eff6ff',
-              color: '#1e40af',
-              border: 'none',
-              borderRadius: '14px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            <Wind size={20} aria-hidden="true" /> Pare e Respire
+          <button onClick={() => irParaTela('dicas')}
+            className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl font-semibold"
+            style={{ backgroundColor: '#e8f4e7', color: '#00451f', fontSize: '16px', minHeight: '48px', border: 'none' }}>
+            <BookOpen size={18} aria-hidden="true" /> Dicas rápidas de segurança
           </button>
         </div>
-      )}
-    </div>
-  )
+
+        <MensagemFinal />
+        <Rodape />
+      </div>
+    )
+  }
 
   // ════════════════════════════════════
   //  RENDER PRINCIPAL
@@ -1819,8 +1990,7 @@ const ClarezaDigital = () => {
         {tela === 'menu' && renderMenu()}
         {tela === 'pix' && renderPix()}
         {tela === 'mensagem' && renderMensagem()}
-        {tela === 'link' && <VerificarLink onVoltar={() => irParaTela('menu')} onConcluir={() => irParaTela('menu')} />}
-        {tela === 'calma' && <PareERespire onVoltar={voltarDeCalma} />}
+        {tela === 'link' && <VerificarLink onVoltar={() => irParaTela('menu')} onConcluir={() => irParaTela('menu')} autoAnalisarTexto={linkAutoAnalisarTexto} />}
         {tela === 'dicas' && renderDicas()}
         {tela === 'analise-livre' && renderAnaliseLivre()}
       </div>
