@@ -119,50 +119,31 @@ const ClarezaDigital = () => {
 
     const texto = descricaoLivre.toLowerCase()
 
-    // ── Cenário A: Mensagem suspeita — analisa diretamente sem redirecionar ──
-    const palavrasMensagem = ['mensagem', 'whatsapp', 'sms', 'email', 'e-mail', 'conversa', 'texto', 'telegram', 'instagram', 'facebook', 'estranha']
-    if (palavrasMensagem.some(p => texto.includes(p))) {
-      const res = calcularResultadoMensagem(descricaoLivre)
-      setResultadoAnaliseLivre({
-        tipo: 'mensagem',
-        nivel: res.nivel,
-        sinais: res.sinais,
-        textoOriginal: descricaoLivre,
-      })
-      irParaTela('analise-livre')
+    // ── Cenário A: Pedido de PIX — redireciona para o fluxo nativo de PIX ──
+    // Detecta combinações de contexto: pedido + meio de pagamento
+    const indicadorPix = ['pix', 'transferência', 'transferencia', 'depósito', 'deposito', 'pagamento', 'pagar', 'dinheiro', 'enviar dinheiro', 'mandar dinheiro', 'valor']
+    const contextoPix  = ['pedir', 'pediram', 'pediu', 'me pede', 'preciso', 'fazer', 'realizar', 'enviar', 'mandar', 'me mandaram', 'solicitou', 'solicitaram', 'urgente', 'imediato', 'agora', 'rápido', 'rapido', 'precisa']
+    const temIndicadorPix = indicadorPix.some(p => texto.includes(p))
+    const temContextoPix  = contextoPix.some(p => texto.includes(p))
+
+    if (temIndicadorPix && (temContextoPix || texto.includes('pix'))) {
+      // Limpa descrição e redireciona para o fluxo completo de PIX
+      setDescricaoLivre('')
+      irParaTela('pix')
       return
     }
 
-    // ── Cenário B: PIX suspeito — analisa diretamente sem redirecionar ──
-    const palavrasPix = ['pix', 'pagamento', 'dinheiro', 'transferência', 'depósito', 'valor', 'cobrança', 'pagar']
-    if (palavrasPix.some(p => texto.includes(p))) {
-      const temPressa = ['urgente', 'agora', 'rápido', 'bloque', 'já', 'imediato', 'socorr'].some(p => texto.includes(p))
-      const naoConhece = ['desconhecido', 'não conheço', 'estranh', 'número novo', 'número diferente'].some(p => texto.includes(p))
-      let nivelPix = 'atencao'
-      if (temPressa && naoConhece) nivelPix = 'alto'
-      else if (temPressa || naoConhece) nivelPix = 'atencao'
-      setResultadoAnaliseLivre({
-        tipo: 'pix',
-        nivel: nivelPix,
-        temPressa,
-      })
-      irParaTela('analise-livre')
-      return
-    }
+    // ── Cenário B: Link suspeito — redireciona para o fluxo nativo de link ──
+    // Detecta combinações de contexto: recebimento + endereço/link/site
+    const indicadorLink = ['link', 'site', 'url', 'endereço', 'endereco', 'endereço eletrônico', 'acesso', 'página', 'pagina']
+    const contextoLink  = ['recebi', 'mandaram', 'me mandaram', 'me enviaram', 'enviaram', 'me pediram para clicar', 'pediram para acessar', 'clique', 'clicar', 'acessar', 'abrir', 'entrar', 'abra', 'acesse', 'estranho', 'suspeito', 'desconhecido']
+    const temIndicadorLink = indicadorLink.some(p => texto.includes(p))
+    const temContextoLink  = contextoLink.some(p => texto.includes(p))
 
-    // ── Cenário C: Link suspeito — analisa diretamente sem redirecionar ──
-    const palavrasLink = ['link', 'site', 'clique', 'clicar', 'endereço', 'url', 'página', 'atualização', 'acessar']
-    if (palavrasLink.some(p => texto.includes(p))) {
-      const altissmoRisco = ['bit.ly', 'tinyurl', 'senha', 'codigo', 'cpf', 'confirme', 'bloqueado', 'urgente', 'ganhou', 'premio', 'banco-', 'bradesco-', 'itau-']
-      const medioRisco = ['gratis', 'free', 'clique', 'acesse', 'cadastro', 'oferta', 'desconto', 'verificar']
-      const achouAlto = altissmoRisco.filter(p => texto.includes(p))
-      const achouMedio = medioRisco.filter(p => texto.includes(p))
-      setResultadoAnaliseLivre({
-        tipo: 'link',
-        nivel: achouAlto.length > 0 ? 'alto' : achouMedio.length > 0 ? 'medio' : 'seguro',
-        palavras: achouAlto.length > 0 ? achouAlto : achouMedio,
-      })
-      irParaTela('analise-livre')
+    if (temIndicadorLink && temContextoLink) {
+      // Limpa descrição e redireciona para o fluxo de verificação de link
+      setDescricaoLivre('')
+      irParaTela('link')
       return
     }
 
