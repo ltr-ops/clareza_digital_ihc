@@ -2,8 +2,11 @@ import { useState } from 'react'
 import { ShieldCheck, X, Headphones } from 'lucide-react'
 
 const BoasVindas = ({ onEntrar, isLogin }) => {
-  // Modal abre automaticamente na 1ª visita (sem conta criada ainda)
-  const [modalAberto, setModalAberto] = useState(!isLogin)
+  // Abre automaticamente APENAS se não existe cadastro salvo no dispositivo.
+  // Usa o localStorage como fonte de verdade para evitar que o modal
+  // reapareça após o cadastro ser concluído na mesma sessão.
+  const usuarioCadastrado = !!localStorage.getItem('clareza_digital_conta')
+  const [modalAberto, setModalAberto] = useState(!usuarioCadastrado)
 
   const abrirModal  = () => setModalAberto(true)
   const fecharModal = () => setModalAberto(false)
