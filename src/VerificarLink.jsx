@@ -8,7 +8,7 @@ import {
   X,
 } from 'lucide-react'
 
-const VerificarLink = ({ onVoltar, onConcluir, onPareRespire }) => {
+const VerificarLink = ({ onVoltar, onConcluir }) => {
   const [link, setLink] = useState('')
   const [descricao, setDescricao] = useState('')
   const [modoDescricao, setModoDescricao] = useState(false)
@@ -57,33 +57,8 @@ const VerificarLink = ({ onVoltar, onConcluir, onPareRespire }) => {
     setAnalisando(false)
   }
 
-  // ── Cabeçalho com "Pare e Respire" (usado nas telas de resultado) ──
-  const Cabecalho = ({ labelVoltar = 'Voltar', aoVoltar }) => (
-    <div
-      className="flex items-center justify-between bg-white border-b border-gray-200"
-      style={{ padding: '12px 16px' }}
-    >
-      <button
-        onClick={aoVoltar}
-        aria-label={labelVoltar}
-        className="text-[#1A4A8A] font-medium"
-        style={{ fontSize: '16px', minHeight: '48px', minWidth: '48px', background: 'none', border: 'none', cursor: 'pointer' }}
-      >
-        ← Voltar
-      </button>
-      <button
-        onClick={onPareRespire}
-        aria-label="Pare e respire — ajuda emocional"
-        className="bg-[#D97706] text-white font-bold rounded-[20px]"
-        style={{ fontSize: '13px', padding: '6px 14px', minHeight: '44px', border: 'none', cursor: 'pointer' }}
-      >
-        PARE E RESPIRE
-      </button>
-    </div>
-  )
-
   // ── Cabeçalho simples (apenas "Voltar", sem "Pare e Respire") ──
-  // Usado exclusivamente na tela de campo (colar o link)
+  // Usado em todas as telas do fluxo "Recebi algo para clicar"
   const CabecalhoSimples = ({ aoVoltar }) => (
     <div
       className="flex items-center bg-white border-b border-gray-200"
@@ -143,7 +118,7 @@ const VerificarLink = ({ onVoltar, onConcluir, onPareRespire }) => {
     if (resultado.nivel === 'alto') {
       return (
         <div className="min-h-screen bg-[#F0F4F8]" style={{ animation: 'fadeIn 300ms ease' }}>
-          <Cabecalho aoVoltar={onVoltar} />
+          <CabecalhoSimples aoVoltar={onVoltar} />
 
           <div
             className="flex flex-col items-center text-center"
@@ -228,7 +203,7 @@ const VerificarLink = ({ onVoltar, onConcluir, onPareRespire }) => {
     if (resultado.nivel === 'medio') {
       return (
         <div className="min-h-screen bg-[#F0F4F8]" style={{ animation: 'fadeIn 300ms ease' }}>
-          <Cabecalho aoVoltar={onVoltar} />
+          <CabecalhoSimples aoVoltar={onVoltar} />
 
           <div
             className="flex flex-col items-center text-center"
@@ -291,7 +266,7 @@ const VerificarLink = ({ onVoltar, onConcluir, onPareRespire }) => {
     // SEGURO
     return (
       <div className="min-h-screen bg-[#F0F4F8]" style={{ animation: 'fadeIn 300ms ease' }}>
-        <Cabecalho aoVoltar={onVoltar} />
+        <CabecalhoSimples aoVoltar={onVoltar} />
 
         <div
           className="flex flex-col items-center text-center"
