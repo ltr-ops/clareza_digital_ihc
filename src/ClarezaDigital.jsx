@@ -23,6 +23,7 @@ import {
   LifeBuoy,
   Wind,
   Lightbulb,
+  UserCircle,
 } from 'lucide-react'
 
 import VerificarLink from './VerificarLink'
@@ -57,6 +58,7 @@ const ClarezaDigital = () => {
   const [descricaoLivre, setDescricaoLivre] = useState('')
   const [resultadoAnaliseLivre, setResultadoAnaliseLivre] = useState(null)
   const [linkAutoAnalisarTexto, setLinkAutoAnalisarTexto] = useState('')
+  const [modalPerfilAberto, setModalPerfilAberto] = useState(false)
 
   // ── Verificar se o usuário já criou conta (localStorage) ──
   useEffect(() => {
@@ -411,26 +413,174 @@ const ClarezaDigital = () => {
         overflow: 'hidden',
       }}
     >
-      {/* ── 1. IDENTIDADE DO SISTEMA (discreta, topo esquerdo) ── */}
+      {/* ── MODAL DE PERFIL ── */}
+      {modalPerfilAberto && (() => {
+        const nomeSalvo   = localStorage.getItem('clareza_digital_nome')
+        const idadeSalva  = localStorage.getItem('clareza_digital_idade')
+        const temPerfil   = !!nomeSalvo
+
+        return (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Meu perfil"
+            onClick={() => setModalPerfilAberto(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(0,0,0,0.45)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 100,
+              padding: '24px 20px',
+            }}
+          >
+            <div
+              onClick={e => e.stopPropagation()}
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '20px',
+                width: '100%',
+                maxWidth: '340px',
+                boxShadow: '0 16px 48px rgba(0,0,0,0.18)',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Cabeçalho do modal */}
+              <div style={{
+                backgroundColor: '#F0FDF4',
+                padding: '20px 20px 16px',
+                borderBottom: '0.5px solid #E5E7EB',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+              }}>
+                <div style={{
+                  width: '42px', height: '42px', borderRadius: '50%',
+                  backgroundColor: '#DCFCE7',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <UserCircle size={26} style={{ color: '#16A34A' }} aria-hidden="true" />
+                </div>
+                <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#1C1C1E', margin: 0 }}>
+                  Meu Perfil
+                </h2>
+              </div>
+
+              {/* Corpo do modal */}
+              <div style={{ padding: '20px' }}>
+                {temPerfil ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {/* Linha Nome */}
+                    <div style={{
+                      display: 'flex', alignItems: 'center', gap: '12px',
+                      backgroundColor: '#F9FAFB', borderRadius: '12px', padding: '14px 16px',
+                      border: '0.5px solid #E5E7EB',
+                    }}>
+                      <span style={{ fontSize: '20px', lineHeight: 1 }} aria-hidden="true">👤</span>
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6B7280', margin: '0 0 2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Nome</p>
+                        <p style={{ fontSize: '17px', fontWeight: '700', color: '#1C1C1E', margin: 0 }}>{nomeSalvo}</p>
+                      </div>
+                    </div>
+                    {/* Linha Idade */}
+                    <div style={{
+                      display: 'flex', alignItems: 'center', gap: '12px',
+                      backgroundColor: '#F9FAFB', borderRadius: '12px', padding: '14px 16px',
+                      border: '0.5px solid #E5E7EB',
+                    }}>
+                      <span style={{ fontSize: '20px', lineHeight: 1 }} aria-hidden="true">🎂</span>
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6B7280', margin: '0 0 2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Idade</p>
+                        <p style={{ fontSize: '17px', fontWeight: '700', color: '#1C1C1E', margin: 0 }}>{idadeSalva} anos</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '8px 0 16px' }}>
+                    <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '16px', lineHeight: '1.5' }}>
+                      Nenhum perfil encontrado.
+                    </p>
+                    <button
+                      onClick={() => { setModalPerfilAberto(false); irParaTela('cadastro') }}
+                      style={{
+                        width: '100%', minHeight: '50px',
+                        backgroundColor: '#16A34A', color: '#FFFFFF',
+                        fontWeight: '700', fontSize: '16px',
+                        border: 'none', borderRadius: '12px', cursor: 'pointer',
+                      }}
+                    >
+                      Criar conta
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Rodapé do modal */}
+              <div style={{ padding: '0 20px 20px' }}>
+                <button
+                  onClick={() => setModalPerfilAberto(false)}
+                  aria-label="Fechar perfil"
+                  style={{
+                    width: '100%', minHeight: '50px',
+                    backgroundColor: '#F3F4F6', color: '#374151',
+                    fontWeight: '600', fontSize: '16px',
+                    border: 'none', borderRadius: '12px', cursor: 'pointer',
+                  }}
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* ── 1. IDENTIDADE DO SISTEMA (discreta, topo esquerdo) + ícone de perfil ── */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
+          justifyContent: 'space-between',
           padding: '16px 20px 0',
         }}
       >
-        <ShieldCheck size={20} style={{ color: '#16A34A' }} aria-hidden="true" />
-        <span
+        {/* Marca à esquerda */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ShieldCheck size={20} style={{ color: '#16A34A' }} aria-hidden="true" />
+          <span
+            style={{
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#374151',
+              letterSpacing: '-0.2px',
+            }}
+          >
+            Clareza Digital
+          </span>
+        </div>
+
+        {/* Ícone de perfil à direita */}
+        <button
+          onClick={() => setModalPerfilAberto(true)}
+          aria-label="Ver meu perfil"
           style={{
-            fontSize: '14px',
-            fontWeight: '600',
-            color: '#374151',
-            letterSpacing: '-0.2px',
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            backgroundColor: '#F0FDF4',
+            border: '1.5px solid #DCFCE7',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            padding: 0,
           }}
         >
-          Clareza Digital
-        </span>
+          <UserCircle size={20} style={{ color: '#16A34A' }} aria-hidden="true" />
+        </button>
       </div>
 
       {/* ── 2. TÍTULO PRINCIPAL ── */}
