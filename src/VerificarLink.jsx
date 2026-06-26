@@ -57,7 +57,7 @@ const VerificarLink = ({ onVoltar, onConcluir, onPareRespire }) => {
     setAnalisando(false)
   }
 
-  // ── Cabeçalho padrão ──
+  // ── Cabeçalho com "Pare e Respire" (usado nas telas de resultado) ──
   const Cabecalho = ({ labelVoltar = 'Voltar', aoVoltar }) => (
     <div
       className="flex items-center justify-between bg-white border-b border-gray-200"
@@ -78,6 +78,24 @@ const VerificarLink = ({ onVoltar, onConcluir, onPareRespire }) => {
         style={{ fontSize: '13px', padding: '6px 14px', minHeight: '44px', border: 'none', cursor: 'pointer' }}
       >
         PARE E RESPIRE
+      </button>
+    </div>
+  )
+
+  // ── Cabeçalho simples (apenas "Voltar", sem "Pare e Respire") ──
+  // Usado exclusivamente na tela de campo (colar o link)
+  const CabecalhoSimples = ({ aoVoltar }) => (
+    <div
+      className="flex items-center bg-white border-b border-gray-200"
+      style={{ padding: '12px 16px' }}
+    >
+      <button
+        onClick={aoVoltar}
+        aria-label="Voltar para o menu principal"
+        className="text-[#1A4A8A] font-medium"
+        style={{ fontSize: '16px', minHeight: '48px', minWidth: '48px', background: 'none', border: 'none', cursor: 'pointer' }}
+      >
+        ← Voltar
       </button>
     </div>
   )
@@ -329,7 +347,7 @@ const VerificarLink = ({ onVoltar, onConcluir, onPareRespire }) => {
   // ── Tela: campo (entrada do link) — exibida diretamente ao abrir ──
   return (
     <div className="min-h-screen bg-[#F0F4F8]">
-      <Cabecalho aoVoltar={onVoltar} />
+      <CabecalhoSimples aoVoltar={onVoltar} />
 
       <div style={{ padding: '24px 16px' }}>
         {/* Ícone e título */}
